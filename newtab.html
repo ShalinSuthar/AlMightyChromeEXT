@@ -6,13 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/quotes.css">
   <title>Google Image Search</title>
 </head>
 
 <body>
   <div class="navbar">
-    <a class="links" href="index.html">Google Search</a>
-    <a class="links" href="advanced.html">Google Advanced Search</a>
+    <a class="links" href="https://www.google.com/search?">Google Search</a>
+    <a class="links" href="https://www.google.com/advanced_search">Google Advanced Search</a>
   </div>
   <div id="main">
     <img class="logo" src="static/GoogleLogo.png" alt="Google Logo">
@@ -22,8 +23,9 @@
       <input class="default-input" type="text" name="q">
       <input class="default-search" id="image-search" type="submit" value="Google Image Search">
     </form>
+    <!-- Quote container added here -->
     <div id="quote-container">
-      <!-- Quote will be dynamically inserted here -->
+      <blockquote class="typewriter" id="quote-text"></blockquote>
     </div>
   </div>
   <script src="js/script.js"></script>

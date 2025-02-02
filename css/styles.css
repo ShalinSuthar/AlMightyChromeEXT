@@ -1,7 +1,3 @@
-/* CSS code architecture is organized in this file to correspond to index.html then image.html then advanced.html and from top of webpage to bottom of webpage */
-
-/* Global styling */
-
 body {
   font-family: 'Open Sans', sans-serif;
 }
@@ -192,8 +188,4 @@ hr+p {
   border: 2px solid rgb(59, 123, 229);
   padding: 0.5rem 1.5rem;
   justify-self: right;
-}
-
-#quote-container {
-  margin-top: 25px;
 }

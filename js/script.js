@@ -1,4 +1,4 @@
-const quoteContainer = document.getElementById("quote-container");
+const quoteContainer = document.getElementById("quote-text");
 
 const quotes = [
   "The best way to predict the future is to invent it.",
