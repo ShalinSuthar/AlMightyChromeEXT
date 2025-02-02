@@ -1,0 +1,17 @@
+{
+    "manifest_version": 3,
+    "name": "Custom Quote New Tab",
+    "description": "Display a custom quote on a new tab.",
+    "version": "1.0",
+    "chrome_url_overrides": {
+      "newtab": "newtab.html"
+    },
+    "permissions": ["storage"],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "background": {
+      "service_worker": "background.js"
+    }
+  }
+  
