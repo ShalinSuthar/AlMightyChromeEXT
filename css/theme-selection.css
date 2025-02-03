@@ -1,0 +1,42 @@
+#theme-selection {
+    position: fixed;      
+    bottom: 20px;        
+    left: 0;
+    right: 0;
+    text-align: center;   
+    padding: 10px;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ccc; 
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#theme-selection label {
+    font-weight: 600;
+    margin-right: 8px;
+    font-size: 14px;
+} 
+
+#theme-select {
+    font-size: 14px;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.theme-option {
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    #theme-selection {
+      bottom: 10px;
+      padding: 8px;
+    }
+  
+    #theme-select {
+      font-size: 12px;
+    }
+}
+  
