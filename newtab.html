@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/quotes.css">
+  <link rel="stylesheet" href="css/theme-selection.css">
   <title>Google Image Search</title>
 </head>
 
@@ -28,7 +29,16 @@
       <blockquote class="typewriter" id="quote-text"></blockquote>
     </div>
   </div>
-  <script src="js/script.js"></script>
+  <div id="theme-selection">
+    <label id="theme-label" for="theme-select">i'm a...</label>
+    <select id="theme-select">
+      <option class="theme-option" value="writer">writer</option>
+      <option class="theme-option" value="engineer">engineer</option>
+      <option class="theme-option" value="wanderer">wanderer</option>
+    </select>
+  </div>
+  <script src="js/quote.js"></script>
+  <script src="js/preferences.js"></script>
 </body>
 
 </html>
