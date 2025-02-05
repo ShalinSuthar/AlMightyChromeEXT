@@ -1,18 +1,19 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const quoteContainer = document.getElementById("quote-text");
-
-  loadAndDisplayQuote();
-
-  // Listen for theme changes in storage
-  chrome.storage.onChanged.addListener((changes, areaName) => {
-    if (areaName === 'sync' && changes.preferredTheme) {
-      // Do a hard refresh of the page. This might affect other components in our extension. 
-      // TODO: How can we call loadAndDisplayQuote() again and have the div "re-build" itself?
-      location.reload();
-    }
-  });
-
-  function loadAndDisplayQuote() {
+// quote widget renders quotes
+const quoteWidget = {
+  id: "quote",
+  name: "Quotes",
+  render: function() {
+    this.loadAndDisplayQuote();
+    // Listen for theme changes in storage
+    chrome.storage.onChanged.addListener((changes, areaName) => {
+      if (areaName === 'sync' && changes.preferredTheme) {
+        // Do a hard refresh of the page. This might affect other components in our extension. 
+        // TODO: How can we call loadAndDisplayQuote() again and have the div "re-build" itself?
+        location.reload();
+      }
+    });
+  },
+  loadAndDisplayQuote: function() {
     // fetch user theme preference
     chrome.storage.sync.get('preferredTheme', (data) => {
       let selectedTheme = data.preferredTheme || 'default';
@@ -20,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       chrome.storage.sync.get(indexKey, (indexData) => {
         let index = indexData[indexKey] || 0;
-
         // fetch quotes from our backend API with two query params: index and category
         fetch(`https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/quote?category=${selectedTheme}&index=${index}`)
           .then(response => response.json())
           .then(data => {
             const randomQuote = data.text.text;
             // render quote
+            const quoteContainer = document.getElementById("quote-text");
             quoteContainer.textContent = randomQuote;
             
             // modulo makes sure we don't hit an out of bounds error, and loops us back to the first quote
@@ -40,4 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   }
-});
+}
+
+window.quoteWidget = quoteWidget;
