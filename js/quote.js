@@ -22,6 +22,7 @@ const quoteWidget = {
       chrome.storage.sync.get(indexKey, (indexData) => {
         let index = indexData[indexKey] || 0;
         // fetch quotes from our backend API with two query params: index and category
+
         fetch(`https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/quote?category=${selectedTheme}&index=${index}`)
           .then(response => response.json())
           .then(data => {
@@ -32,14 +33,40 @@ const quoteWidget = {
             
             // modulo makes sure we don't hit an out of bounds error, and loops us back to the first quote
             // once customer has seen all the quotes for this category
+
+            // Very simple example of what we want to acheive
+            // If the theme is being passed from the backend 
+            // then pick it from there
+            const quoteTheme = data.text?.theme;
+
+            // If not then we can define a list of predefined themes and pick one randomly
+            let themes = ["happy", "melancholic", "inspirational", "thoughtful", "motivational"];
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+
+            // Clear previous content and apply theme
+            quoteContainer.textContent = "";
+            quoteContainer.className = quoteTheme ?? randomTheme;
+
+            // Apply typewriter effect
+            typeWriterEffect(randomQuote, quoteContainer);
+
             let nextIndex = (index + 1) % data.totalQuotes;
-            // update index in browser storage
-            // for storage limits, see: https://developer.chrome.com/docs/extensions/reference/api/storage
             chrome.storage.sync.set({ [indexKey]: nextIndex });
           })
           .catch(error => console.error('Error fetching quote:', error));
       });
     });
+    function typeWriterEffect(text, element) {
+      let index = 0;
+      function type() {
+        if (index < text.length) {
+          element.innerHTML += text.charAt(index);
+          index++;
+          setTimeout(type, 100); // We can adjust speed here
+        }
+      }
+      type();
+    }
   }
 }
 

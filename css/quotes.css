@@ -1,52 +1,15 @@
-#quote-container {
-    margin-top: 30px;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    padding: 0 20px;
-}
-
-#quote-container blockquote {
-    max-width: max-content;
-    width: 100%;
-    font-family: 'Courier New', Courier, monospace;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.7);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.4);
-    margin: 0;
-}
-
-#quote-container blockquote {
-    font-size: 1.25rem;
-    font-style: italic;
-    color: white;
-    position: relative;
-    padding-left: 20px;
-}
-
-.typewriter {
+/* Typewriter Effect */
+#quote-text {
     display: inline-block;
-    white-space: nowrap;
     overflow: hidden;
-    border-right: 0.15em solid #f0f0f0;
-    animation: typing 4s steps(40) 1s 1 normal both, blink 0.75s step-end infinite;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 2rem;
+    font-weight: bold;
+    border-right: 3px solid rgba(255, 255, 255, 0.8);
+    animation: blinkCursor 0.8s infinite;
 }
 
-@keyframes typing {
-    from {
-        width: 0;
-    }
-
-    to {
-        width: 100%;
-    }
-}
-
-@keyframes blink {
-    50% {
-        border-color: transparent;
-    }
+@keyframes blinkCursor {
+    50% { border-color: transparent; }
 }

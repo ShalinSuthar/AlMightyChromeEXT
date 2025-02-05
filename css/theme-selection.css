@@ -1,6 +1,6 @@
 #theme-selection {
-    position: fixed;      
-    bottom: 20px;        
+    position: relative;      
+    top: 0px;        
     left: 0;
     right: 0;
     text-align: center;   

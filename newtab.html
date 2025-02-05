@@ -9,13 +9,23 @@
   <link rel="stylesheet" href="css/quotes.css">
   <link rel="stylesheet" href="css/theme-selection.css">
   <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/themes.css">
   <title>Google Image Search</title>
 </head>
 
 <body>
-  <div class="navbar">
+  <!-- Commenting out the nav bar for now -->
+  <!-- <div class="navbar">
     <a class="links" href="https://www.google.com/search?">Google Search</a>
     <a class="links" href="https://www.google.com/advanced_search">Google Advanced Search</a>
+  </div> -->
+  <div id="theme-selection">
+    <label id="theme-label" for="theme-select">i'm a...</label>
+    <select id="theme-select">
+      <option class="theme-option" value="writer">writer</option>
+      <option class="theme-option" value="engineer">engineer</option>
+      <option class="theme-option" value="wanderer">wanderer</option>
+    </select>
   </div>
   <div id="main">
     <img class="logo" src="static/GoogleLogo.png" alt="Google Logo">
@@ -30,14 +40,18 @@
       <blockquote class="typewriter" id="quote-text"></blockquote>
     </div>
   </div>
-  <div id="theme-selection">
-    <label id="theme-label" for="theme-select">i'm a...</label>
+  
+  <!-- <div>
     <select id="theme-select">
-      <option class="theme-option" value="writer">writer</option>
-      <option class="theme-option" value="engineer">engineer</option>
-      <option class="theme-option" value="wanderer">wanderer</option>
+      <option value="inspirational">Inspirational</option>
+      <option value="motivational">Motivational</option>
+      <option value="melancholic">Melancholic</option>
+      <option value="happy">Happy</option>
+      <option value="thoughtful">Thought-Provoking</option>
     </select>
   </div>
+  
+  </div> -->
   <div id="widget-settings">
     <h3>Widgets</h3>
   </div>
