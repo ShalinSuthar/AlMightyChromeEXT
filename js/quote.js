@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // modulo makes sure we don't hit an out of bounds error, and loops us back to the first quote
             // once customer has seen all the quotes for this category
             let nextIndex = (index + 1) % data.totalQuotes;
-            console.log()
             // update index in browser storage
             // for storage limits, see: https://developer.chrome.com/docs/extensions/reference/api/storage
             chrome.storage.sync.set({ [indexKey]: nextIndex });
