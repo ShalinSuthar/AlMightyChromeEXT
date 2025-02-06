@@ -1,0 +1,58 @@
+/* Trivia Container */
+#trivia-container {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    width: 100%;
+    position: fixed; /* Stick to bottom */
+    bottom: 10px; /* Distance from bottom */
+    left: 50%;
+    transform: translateX(-50%); /* Center horizontally */
+    text-align: center;
+    padding: 20px;
+    background: rgba(248, 249, 250, 0.95); /* Slight transparency */
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9999; /* Ensures it's above other elements */
+}
+
+
+/* Question */
+#trivia-question {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Options */
+#trivia-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.trivia-button {
+    padding: 10px;
+    border: none;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.trivia-button:hover {
+    background-color: #0056b3;
+}
+
+.trivia-button:active {
+    background-color: #003f7f;
+}
+
+.trivia-button.correct {
+    background-color: #28a745;
+}
+
+.trivia-button.wrong {
+    background-color: #dc3545;
+}
