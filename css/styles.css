@@ -189,3 +189,36 @@ hr+p {
   padding: 0.5rem 1.5rem;
   justify-self: right;
 }
+
+.draggable {
+  position: absolute;
+  background-color: #245768;
+  border: 1px solid #ccc;
+  padding: 10px;
+  cursor: move;
+  display: flex;
+  flex-direction: column;
+  cursor: grab;
+}
+
+.draggable.dragging {
+  cursor: grabbing;
+}
+
+#note-content {
+  flex-grow: 1;
+  border: none;
+  resize: none;
+  overflow: hidden;
+}
+
+.note-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 5px;
+}
+
+.note-controls button {
+  margin-left: 5px;
+  cursor: pointer;
+}

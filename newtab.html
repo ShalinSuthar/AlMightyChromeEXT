@@ -29,6 +29,13 @@
     </select>
   </div>
   <div id="main">
+    <div class="draggable" id="draggableElement">
+      <textarea id="note-content">This is my draggable note.</textarea>
+      <div class="note-controls">
+        <button id="edit-button">Edit</button>
+        <button id="delete-button">Delete</button>
+      </div>
+    </div>
     <img class="logo" src="static/GoogleLogo.png" alt="Google Logo">
     <span id="logo-subtitle">Search</span>
     <form id="sub" action="https://google.com/search">
@@ -66,6 +73,7 @@
   <script src="js/settings.js"></script>
   <!-- load widgets renderer last -->
   <script src="js/widgets.js"></script>
+  <script src="js/notes.js"></script>
 </body>
 
 </html>
