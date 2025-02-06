@@ -34,7 +34,8 @@ const triviaWidget = {
             optionButton.textContent = `${key}. ${value}`;
             optionButton.classList.add("trivia-button");
             optionButton.addEventListener("click", () => {
-                this.handleAnswer(value, data.answer, triviaScore);
+                // e.g., if "b" equals "b", then correct
+                this.handleAnswer(key, data.answer, triviaScore);
             });
             optionsContainer.appendChild(optionButton);
         });
