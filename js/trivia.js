@@ -32,14 +32,17 @@ const triviaWidget = {
         Object.entries(data.options).forEach(([key, value]) => {
             const optionButton = document.createElement('button');
             optionButton.textContent = `${key}. ${value}`;
-            optionButton.onclick = () => this.handleAnswer(value, data.answer, triviaScore);
+            optionButton.classList.add("trivia-button");
+            optionButton.addEventListener("click", () => {
+                this.handleAnswer(value, data.answer, triviaScore);
+            });
             optionsContainer.appendChild(optionButton);
         });
     },
     handleAnswer: function(selectedOption, correctAnswer, triviaScore) {
         triviaScore = (selectedOption === correctAnswer) ? triviaScore + 1 : triviaScore - 1;
 
-        chrome.storage.sync.set({ [triviaScore]: triviaScore }, () => {
+        chrome.storage.sync.set({ triviaScore: triviaScore }, () => {
             this.loadAndDisplayTriviaQuestion();
         });
     }
