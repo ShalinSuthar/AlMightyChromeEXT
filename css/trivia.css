@@ -15,7 +15,6 @@
     z-index: 9999; /* Ensures it's above other elements */
 }
 
-
 /* Question */
 #trivia-question {
     font-size: 1.5rem;
@@ -41,7 +40,7 @@
     transition: background 0.3s ease;
 }
 
-.trivia-button:hover {
+.trivia-button:not(.correct):not(.wrong):hover {
     background-color: #0056b3;
 }
 
@@ -50,9 +49,50 @@
 }
 
 .trivia-button.correct {
-    background-color: #28a745;
+    background-color: #28a745 !important;
+    color: white !important;
 }
 
 .trivia-button.wrong {
-    background-color: #dc3545;
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.trivia-button:disabled {
+    opacity: 0.7;
+}
+
+#trivia-score {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Level color backgrounds */
+#trivia-container.easy {
+    background-color: #d4edda; /* Light green */
+}
+
+#trivia-container.medium {
+    background-color: #fff3cd; /* Light yellow */
+}
+
+#trivia-container.hard {
+    background-color: #f8d7da; /* Light red */
+}
+
+#trivia-container.super-hard {
+    background-color: #d1c4e9; /* Light purple */
+}
+
+#trivia-container.incredibly-hard {
+    background-color: #cce5ff; /* Light blue */
+}
+
+#trivia-container.impossible {
+    background-color: #f5c6cb; /* Darker red */
+}
+
+#trivia-container.genius {
+    background-color: #ffd700; /* Gold */
 }
