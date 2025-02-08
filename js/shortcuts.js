@@ -1,6 +1,6 @@
 const shortcutsWidget = {
     id: "shortcuts",
-    name: "Pinned Shortcuts",
+    name: "Shortcuts",
   
     // We'll store the in-memory shortcuts and DOM references as properties
     shortcuts: [],
