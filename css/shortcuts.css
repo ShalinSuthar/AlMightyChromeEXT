@@ -1,4 +1,4 @@
-#shortcutContainer {
+  #shortcutContainer {
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
@@ -7,7 +7,7 @@
     justify-content: center;
   }
   
-#addShortcutBtn {
+  #addShortcutBtn {
     display: block;
     margin: 20px auto;
     background-color: #fff;
@@ -21,12 +21,11 @@
     transition: box-shadow 0.2s ease-in-out;
     outline: none;
   }
-  
   #addShortcutBtn:hover {
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
   }
   
-.shortcut-tile {
+  .shortcut-tile {
     width: 112px;
     height: 112px;
     background-color: #fff;
@@ -41,18 +40,15 @@
     position: relative;
     transition: box-shadow 0.2s ease-in-out;
   }
-  
   .shortcut-tile:hover {
     box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   }
-  
   /* favicon or custom icon */
   .shortcut-tile img {
     width: 48px;
     height: 48px;
     margin-bottom: 6px;
   }
-  
   /* site title / label */
   .shortcut-tile span {
     display: block;
@@ -63,7 +59,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
   }
-  
+
   .shortcut-tile button {
     display: inline-block;
     position: absolute;
@@ -75,73 +71,76 @@
     color: #777;
     outline: none;
   }
-  
   .shortcut-tile .edit-btn {
     right: 32px;
   }
-  
   .shortcut-tile .delete-btn {
     right: 4px;
   }
-  
   .shortcut-tile button:hover {
     color: #000;
   }
   
-  #shortcutModal {
-    position: fixed;
-    top: 0; 
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    display: none; /* shown via JS */
-    align-items: center;
-    justify-content: center;
-  }
-  
-  #shortcutModal .modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    position: relative;
-    min-width: 300px;
-  }
-  
-  #modalTitle {
-    margin-top: 0;
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-  
-  #shortcutModal label {
-    display: block;
-    margin: 8px 0 4px 0;
-    font-size: 14px;
-    color: #202124;
-  }
-  
-  #shortcutModal input {
-    width: 100%;
-    padding: 6px 8px;
-    margin-bottom: 12px;
-    font-size: 14px;
-  }
-  
-  #shortcutModal button {
-    margin-right: 6px;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  #saveShortcutBtn {
-    background-color: #1a73e8;
-    color: #fff;
-  }
-  
-  #cancelShortcutBtn {
-    background-color: #f1f3f4;
-    color: #3c4043;
-  }  
+/* Modal CSS */
+#shortcutModal {
+  /* Hidden by default; shown via JS */
+  display: none; 
+
+  /* Position it in the center of the viewport */
+  position: fixed; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  /* Size & appearance */
+  width: 400px;       /* or use max-width */
+  background: #fff; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  z-index: 9999;      /* ensure it sits above other elements */
+}
+
+/* Title styling */
+#modalTitle {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+  color: #202124;
+}
+
+/* Labels */
+#shortcutModal label {
+  display: block;
+  margin: 8px 0 4px;
+  font-size: 14px;
+  color: #202124;
+}
+
+/* Inputs */
+#shortcutModal input {
+  width: 100%;
+  padding: 6px 8px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Buttons within the modal */
+#shortcutModal button {
+  margin-right: 8px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#saveShortcutBtn {
+  background-color: #1a73e8;
+  color: #fff;
+}
+
+#cancelShortcutBtn {
+  background-color: #f1f3f4;
+  color: #3c4043;
+}
