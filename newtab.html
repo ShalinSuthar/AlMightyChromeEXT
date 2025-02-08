@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/settings.css">
   <link rel="stylesheet" href="css/themes.css">
   <link rel="stylesheet" href="css/trivia.css">
+  <link rel="stylesheet" href="css/shortcuts.css">
   <title>Google Image Search</title>
 </head>
 
@@ -43,6 +44,19 @@
       <input class="default-input" type="text" name="q">
       <input class="default-search" id="image-search" type="submit" value="Google Image Search">
     </form>
+    <!-- Shortcuts -->
+    <div id="shortcutContainer"></div>
+    <button id="addShortcutBtn">+ Add Shortcut</button>
+    <!-- Simple modal for adding/editing shortcuts -->
+    <div id="shortcutModal" style="display:none;">
+      <h2 id="modalTitle">Add Shortcut</h2>
+      <label for="shortcutTitle">Name</label>
+      <input type="text" id="shortcutTitle" />
+      <label for="shortcutUrl">URL</label>
+      <input type="url" id="shortcutUrl" />
+      <button id="saveShortcutBtn">Save</button>
+      <button id="cancelShortcutBtn">Cancel</button>
+    </div>
     <!-- Quote container added here -->
     <div id="quote-container">
       <blockquote class="typewriter" id="quote-text"></blockquote>
@@ -72,6 +86,7 @@
   <script src="js/trivia.js"></script>
   <script src="js/preferences.js"></script>
   <script src="js/settings.js"></script>
+  <script src="js/shortcuts.js"></script>
   <!-- load widgets renderer last -->
   <script src="js/widgets.js"></script>
   <script src="js/notes.js"></script>
