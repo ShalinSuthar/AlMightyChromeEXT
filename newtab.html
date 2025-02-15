@@ -30,13 +30,15 @@
     </select>
   </div>
   <div id="main">
-    <div class="draggable" id="draggableElement">
+    <!-- hiding notes for now -->
+    <!-- <div class="draggable-component custom-note" id="noteId">
       <textarea id="note-content">This is my draggable note.</textarea>
       <div class="note-controls">
         <button id="edit-button">Edit</button>
         <button id="delete-button">Delete</button>
       </div>
-    </div>
+    </div> -->
+
     <img class="logo" src="static/GoogleLogo.png" alt="Google Logo">
     <span id="logo-subtitle">Search</span>
     <form id="sub" action="https://google.com/search">
@@ -60,12 +62,12 @@
       </div>
     </div>
     <!-- Quote container added here -->
-    <div id="quote-container">
+    <div id="quote-container" class="draggable-component">
       <blockquote class="typewriter" id="quote-text"></blockquote>
     </div>
   </div>
   <!-- Trivia container added here  -->
-  <div id="trivia-container">
+  <div class="draggable-component" id="trivia-container">
     <div id="trivia-score"></div>
     <h3 id="trivia-question"></h3>
     <div id="trivia-options-container"></div>
@@ -91,7 +93,7 @@
   <script src="js/shortcuts.js"></script>
   <!-- load widgets renderer last -->
   <script src="js/widgets.js"></script>
-  <script src="js/notes.js"></script>
+  <script src="js/draggable.js"></script>
 </body>
 
 </html>
