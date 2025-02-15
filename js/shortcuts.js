@@ -12,13 +12,20 @@ const shortcutsWidget = {
     shortcutUrlInput: null,
     saveShortcutBtn: null,
     cancelShortcutBtn: null,
+    widgets: null,
   
     editIndex: null, // track if we're editing an existing shortcut
-
+    hide: function() {
+      this.shortcutContainer = document.getElementById("shortcutContainer");
+      if (shortcutContainer) {
+          this.shortcutContainer.style.display = "none";
+      }
+    },
     render: function() {
         console.log("rendered!");
       // Grab DOM elements
       this.shortcutContainer = document.getElementById("shortcutContainer");
+      this.shortcutContainer.style.display = "block";
       this.addShortcutBtn = document.getElementById("addShortcutBtn");
       this.shortcutModal = document.getElementById("shortcutModal");
       this.modalTitle = document.getElementById("modalTitle");

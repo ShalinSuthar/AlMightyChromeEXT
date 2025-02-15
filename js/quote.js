@@ -13,6 +13,12 @@ const quoteWidget = {
       }
     });
   },
+  hide: function() {
+    const widgetElement = document.getElementById('quote-container');
+    if (widgetElement) {
+        widgetElement.style.display = "none";
+    }
+  },
   loadAndDisplayQuote: function() {
     // fetch user theme preference
     chrome.storage.sync.get('preferredTheme', (data) => {
@@ -28,6 +34,8 @@ const quoteWidget = {
           .then(data => {
             const randomQuote = data.text.text;
             // render quote
+            const widgetElement = document.getElementById('quote-container');
+            widgetElement.style.display = "block";
             const quoteContainer = document.getElementById("quote-text");
             quoteContainer.textContent = randomQuote;
             

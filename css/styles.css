@@ -190,7 +190,13 @@ hr+p {
   justify-self: right;
 }
 
-.draggable {
+.draggable-component {
+  cursor: grab;
+}
+.draggable-component.dragging {
+  cursor: grabbing;
+}
+.custom-note {
   position: absolute;
   background-color: #245768;
   border: 1px solid #ccc;
@@ -198,11 +204,6 @@ hr+p {
   cursor: move;
   display: flex;
   flex-direction: column;
-  cursor: grab;
-}
-
-.draggable.dragging {
-  cursor: grabbing;
 }
 
 #note-content {

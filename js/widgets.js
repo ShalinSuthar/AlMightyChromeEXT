@@ -9,6 +9,9 @@ function loadWidgets() {
             if (enabled.includes(widget.id)) {
                 widget.render();
             }
+            else{
+                widget.hide();
+            }
         });
     });
 }
