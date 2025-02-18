@@ -33,24 +33,15 @@ const shortcutsWidget = {
       this.shortcutUrlInput = document.getElementById("shortcutUrl");
       this.saveShortcutBtn = document.getElementById("saveShortcutBtn");
       this.cancelShortcutBtn = document.getElementById("cancelShortcutBtn");
-        
-      console.log(saveShortcutBtn);
-      console.log(this.shortcutUrlInput);
-    console.log(this.shortcutTitleInput);
-      console.log(cancelShortcutBtn);
-      console.log(modalTitle);
-      console.log(shortcutContainer);
+      
       // Initialize event listeners
       this.initEventListeners();
-      console.log("inited event listeners!");
       // Load existing shortcuts from storage and render them
       this.loadShortcutsAndRender();
-      console.log("rendered shortcuts");
     },
     initEventListeners: function() {
       // "Add Shortcut" button
       this.addShortcutBtn.addEventListener("click", () => {
-        console.log("Add button clicked");
         this.openAddModal();
       });
   
@@ -84,6 +75,8 @@ const shortcutsWidget = {
       this.shortcuts.forEach((shortcut, index) => {
         const tile = document.createElement("div");
         tile.className = "shortcut-tile";
+        // TODO: this doesn't work. How can we make each tile draggable?
+        tile.classList.add("draggable-component");
   
         // use a favicon or custom icon
         const faviconUrl = `https://www.google.com/s2/favicons?domain=${shortcut.url}&sz=64`;
