@@ -29,5 +29,11 @@ function makeDraggable(element) {
     });
 
     // Adjust position on window resize to keep it in the correct spot
-    window.addEventListener("resize", setInitialPosition);
+    window.addEventListener("resize", setInitialPosition(element));
+}
+
+// TODO: how should we determine initial position?
+function setInitialPosition(element) {
+    element.style.position = "absolute";
+    element.style.top = `${window.innerHeight * 0.45}px`; // 10% down (90% from bottom)
 }
