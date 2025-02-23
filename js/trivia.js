@@ -5,6 +5,12 @@ const triviaWidget = {
     render: function() {
       this.loadAndDisplayTriviaQuestion();
     },
+    hide: function() {
+        const widgetElement = document.getElementById('trivia-container');
+        if (widgetElement) {
+            widgetElement.style.display = "none";
+        }
+    },
     loadAndDisplayTriviaQuestion: function() {
       // fetch user theme preference
       chrome.storage.sync.get('triviaScore', (data) => {
