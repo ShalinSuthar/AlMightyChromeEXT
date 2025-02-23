@@ -13,3 +13,20 @@
 @keyframes blinkCursor {
     50% { border-color: transparent; }
 }
+
+/* Position must be absolute for draggable component:
+
+An absolutely positioned element no longer exists in the normal document flow. 
+Instead, it sits on its own layer separate from everything else. 
+This is very useful: it means that we can create isolated UI features that don't interfere with the layout of other elements on the page.
+
+See https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Positioning
+*/
+.draggable-component {
+    position: absolute;
+    /* Set the quote to render at the center bottom-half of the page */
+    top: 75%;
+    left: 50%;
+    /* shifts the element so it is centered around its own midpoint */
+    transform: translate(-50%, 50%);
+}
