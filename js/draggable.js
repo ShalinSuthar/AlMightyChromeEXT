@@ -3,37 +3,42 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function makeDraggable(element) {
-    let isDragging = false;
-    let offsetX, offsetY;
-    element.style.position = "absolute";
-    element.style.top = `${window.innerHeight * 0.45}px`; // 10% down (90% from bottom)
+    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-    element.addEventListener("mousedown", (e) => {
-        if (e.target.closest("input, textarea, button")) return;
+    // When the user presses down on the element, start the drag
+    element.addEventListener('mousedown', onMouseDown);
 
-        isDragging = true;
-        offsetX = e.clientX - element.getBoundingClientRect().left;
-        offsetY = e.clientY - element.getBoundingClientRect().top;
-        element.style.zIndex = 1000;
-    });
+    function onMouseDown(e) {
+        e.preventDefault();
 
-    document.addEventListener("mousemove", (e) => {
-        if (!isDragging) return;
-        element.style.left = `${e.clientX - offsetX}px`;
-        element.style.top = `${e.clientY - offsetY}px`;
-    });
+        // Get the initial mouse cursor position
+        pos3 = e.clientX;
+        pos4 = e.clientY;
 
-    document.addEventListener("mouseup", () => {
-        isDragging = false;
-        element.style.zIndex = "auto";
-    });
+        // When the user moves the mouse or lets go, attach or remove the event listeners
+        document.addEventListener('mouseup', onMouseUp);
+        document.addEventListener('mousemove', onMouseMove);
+    }
 
-    // Adjust position on window resize to keep it in the correct spot
-    window.addEventListener("resize", setInitialPosition(element));
-}
+    function onMouseMove(e) {
+        e.preventDefault();
 
-// TODO: how should we determine initial position?
-function setInitialPosition(element) {
-    element.style.position = "absolute";
-    element.style.top = `${window.innerHeight * 0.45}px`; // 10% down (90% from bottom)
+        // Calculate how far the mouse has moved
+        pos1 = pos3 - e.clientX;
+        pos2 = pos4 - e.clientY;
+
+        // Save new cursor position
+        pos3 = e.clientX;
+        pos4 = e.clientY;
+
+        // Move the element according to the distance moved
+        element.style.top = (element.offsetTop - pos2) + "px";
+        element.style.left = (element.offsetLeft - pos1) + "px";
+    }
+
+    function onMouseUp() {
+        // Stop moving when mouse is released
+        document.removeEventListener('mouseup', onMouseUp);
+        document.removeEventListener('mousemove', onMouseMove);
+    }
 }
