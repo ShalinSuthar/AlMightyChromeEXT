@@ -40,5 +40,7 @@ function makeDraggable(element) {
         // Stop moving when mouse is released
         document.removeEventListener('mouseup', onMouseUp);
         document.removeEventListener('mousemove', onMouseMove);
+        // set position of the widget after dragging
+        chrome.storage.sync.set({ 'triviaX': element.offsetLeft, 'triviaY': element.offsetTop });
     }
 }
