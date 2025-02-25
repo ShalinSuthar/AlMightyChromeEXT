@@ -22,7 +22,6 @@ const shortcutsWidget = {
       }
     },
     render: function() {
-        console.log("rendered!");
       // Grab DOM elements
       this.shortcutContainer = document.getElementById("shortcutContainer");
       this.shortcutContainer.style.display = "block";
@@ -124,7 +123,6 @@ const shortcutsWidget = {
       });
     },
     openAddModal: function() {
-      console.log("in modal");
       this.editIndex = null; // no index, we're adding
       this.modalTitle.textContent = "Add Shortcut";
       this.shortcutTitleInput.value = "";
