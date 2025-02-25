@@ -14,7 +14,7 @@ function makeDraggable(element) {
         // Get the initial mouse cursor position
         pos3 = e.clientX;
         pos4 = e.clientY;
-        element.style.transform = "none";
+
         // When the user moves the mouse or lets go, attach or remove the event listeners
         document.addEventListener('mouseup', onMouseUp);
         document.addEventListener('mousemove', onMouseMove);
