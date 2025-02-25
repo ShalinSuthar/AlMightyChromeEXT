@@ -40,8 +40,8 @@ const quoteWidget = {
             quoteContainer.textContent = randomQuote;
 
             // render widget according to its last saved position
-            quoteContainer.style.left = `${quoteMetadata.quoteX}px`;
-            quoteContainer.style.top = `${quoteMetadata.quoteY}px`;
+            // quoteContainer.style.left = `${quoteMetadata.quoteX}px`;
+            // quoteContainer.style.top = `${quoteMetadata.quoteY}px`;
             
             // modulo makes sure we don't hit an out of bounds error, and loops us back to the first quote
             // once customer has seen all the quotes for this category

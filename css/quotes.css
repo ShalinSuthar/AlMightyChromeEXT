@@ -8,6 +8,8 @@
     font-weight: bold;
     border-right: 3px solid rgba(255, 255, 255, 0.8);
     animation: blinkCursor 0.8s infinite;
+    /* prevents resizing the element as we drag it around */
+    resize: none;
 }
 
 @keyframes blinkCursor {
@@ -25,7 +27,7 @@ See https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layo
 #quote-container {
     position: absolute;
     /* Set the quote to render at the center bottom-half of the page */
-    /* top: 75%;
+    top: 75%;
     left: 50%;
     /* shifts the element so it is centered around its own midpoint */
     /* transform: translate(-50%, 50%); */
