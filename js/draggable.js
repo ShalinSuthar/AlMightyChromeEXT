@@ -14,7 +14,7 @@ function makeDraggable(element) {
         // Get the initial mouse cursor position
         pos3 = e.clientX;
         pos4 = e.clientY;
-
+        element.style.transform = "none";
         // When the user moves the mouse or lets go, attach or remove the event listeners
         document.addEventListener('mouseup', onMouseUp);
         document.addEventListener('mousemove', onMouseMove);
@@ -40,7 +40,9 @@ function makeDraggable(element) {
         // Stop moving when mouse is released
         document.removeEventListener('mouseup', onMouseUp);
         document.removeEventListener('mousemove', onMouseMove);
-        // set position of the widget after dragging
-        chrome.storage.sync.set({ 'triviaX': element.offsetLeft, 'triviaY': element.offsetTop });
+        // set position of the widgets after dragging
+        const posXKey = `${element.id}`.split('-')[0] + 'X';
+        const posYKey = `${element.id}`.split('-')[0] + 'Y';
+        chrome.storage.sync.set({ [posXKey]: element.offsetLeft, [posYKey]: element.offsetTop });
     }
 }

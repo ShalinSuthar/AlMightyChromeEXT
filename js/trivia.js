@@ -33,10 +33,8 @@ const triviaWidget = {
         const triviaContainer = document.getElementById('trivia-container');
 
         // render widget according to its last saved position
-        let triviaX = browserData.triviaX;
-        let triviaY = browserData.triviaY;
-        triviaContainer.style.left = `${triviaX}px`;
-        triviaContainer.style.top = `${triviaY}px`;
+        triviaContainer.style.left = `${browserData.triviaX}px`;
+        triviaContainer.style.top = `${browserData.triviaY}px`;
     
         questionElement.textContent = apiData.question;
         // clear any previous options appended to the container

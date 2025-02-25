@@ -21,8 +21,8 @@ const quoteWidget = {
   },
   loadAndDisplayQuote: function() {
     // fetch user theme preference
-    chrome.storage.sync.get('preferredTheme', (data) => {
-      let selectedTheme = data.preferredTheme || 'default';
+    chrome.storage.sync.get(['preferredTheme', 'quoteX', 'quoteY'], (quoteMetadata) => {
+      let selectedTheme = quoteMetadata.preferredTheme || 'default';
       let indexKey = `${selectedTheme}Index`;
 
       chrome.storage.sync.get(indexKey, (indexData) => {
@@ -38,6 +38,10 @@ const quoteWidget = {
             widgetElement.style.display = "block";
             const quoteContainer = document.getElementById("quote-text");
             quoteContainer.textContent = randomQuote;
+
+            // render widget according to its last saved position
+            quoteContainer.style.left = `${quoteMetadata.quoteX}px`;
+            quoteContainer.style.top = `${quoteMetadata.quoteY}px`;
             
             // modulo makes sure we don't hit an out of bounds error, and loops us back to the first quote
             // once customer has seen all the quotes for this category

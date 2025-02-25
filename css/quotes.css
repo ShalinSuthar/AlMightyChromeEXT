@@ -22,11 +22,11 @@ This is very useful: it means that we can create isolated UI features that don't
 
 See https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Positioning
 */
-.draggable-component {
+#quote-container {
     position: absolute;
     /* Set the quote to render at the center bottom-half of the page */
-    top: 75%;
+    /* top: 75%;
     left: 50%;
     /* shifts the element so it is centered around its own midpoint */
-    transform: translate(-50%, 50%);
+    /* transform: translate(-50%, 50%); */ */
 }
