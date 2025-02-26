@@ -15,13 +15,16 @@
     background-color: rgba(248, 248, 248, 0.95);
     border-bottom: 1px solid #e0e0e0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 .control-group {
     display: flex;
     align-items: center;
     gap: 10px;
+    position: relative;
 }
+
 
 #theme-label {
     font-weight: 600;

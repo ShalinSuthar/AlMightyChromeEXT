@@ -1,20 +1,77 @@
-/* Sidebar settings */
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.icon-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.settings-icon {
+    font-size: 20px;
+}
+
 #widget-settings {
-    position: fixed;
-    left: 10px;
-    top: 10px;
+    position: absolute;
+    top: 100%;
+    right: 0;
     background: white;
-    padding: 10px;
-    width: 150px;
-    font-family: "Open Sans", sans-serif;
+    padding: 16px;
+    width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: none;
+    margin-top: 8px;
+    z-index: 1000;
+}
+
+#widget-settings.show {
+    display: block;
 }
 
 #widget-settings h3 {
-    margin-top: 0;
+    margin: 0 0 12px 0;
+    font-size: 16px;
+    color: #202124;
 }
 
-#widget-settings label {
-    display: block;
-    margin-bottom: 8px;
+#widget-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.widget-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.widget-item:hover {
+    background-color: #f1f3f4;
+}
+
+.widget-item label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+    color: #5f6368;
+}
+
+.widget-item input[type="checkbox"] {
+    margin: 0;
     cursor: pointer;
 }
