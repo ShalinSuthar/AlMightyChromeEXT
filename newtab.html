@@ -21,13 +21,26 @@
     <a class="links" href="https://www.google.com/search?">Google Search</a>
     <a class="links" href="https://www.google.com/advanced_search">Google Advanced Search</a>
   </div> -->
-  <div id="theme-selection">
-    <label id="theme-label" for="theme-select">i'm a...</label>
-    <select id="theme-select">
-      <option class="theme-option" value="writer">writer</option>
-      <option class="theme-option" value="engineer">engineer</option>
-      <option class="theme-option" value="wanderer">wanderer</option>
-    </select>
+  <div id="top-controls">
+    <div id="theme-selection">
+      <div class="control-group">
+        <label id="theme-label" for="theme-select">i'm a...</label>
+        <select id="theme-select">
+          <option class="theme-option" value="writer">writer</option>
+          <option class="theme-option" value="engineer">engineer</option>
+          <option class="theme-option" value="wanderer">wanderer</option>
+        </select>
+      </div>
+     
+      <div id="color-picker-container" class="control-group">
+        <input type="color" id="bgColorPicker">
+        <button id="colorPickerBtn">
+          <span class="picker-icon">🎨</span>
+          <span class="picker-text">Background</span>
+        </button>
+        <span id="currentColor"></span>
+      </div>
+    </div>
   </div>
   <div id="main">
     <!-- hiding notes for now -->
@@ -94,6 +107,7 @@
   <!-- load widgets renderer last -->
   <script src="js/draggable.js"></script>
   <script src="js/widgets.js"></script>
+  <script src="js/custom-bg.js"></script>
 </body>
 
 </html>

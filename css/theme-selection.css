@@ -1,42 +1,114 @@
-#theme-selection {
-    position: relative;      
-    top: 0px;        
+#top-controls {
+    position: fixed;
+    top: 0;
     left: 0;
     right: 0;
-    text-align: center;   
-    padding: 10px;
-    background-color: #f8f8f8;
-    border-top: 1px solid #ccc; 
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
-#theme-selection label {
+#theme-selection {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 20px;
+    padding: 12px 24px;
+    background-color: rgba(248, 248, 248, 0.95);
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#theme-label {
     font-weight: 600;
-    margin-right: 8px;
     font-size: 14px;
-} 
+    color: #333;
+}
 
 #theme-select {
     font-size: 14px;
-    padding: 6px 10px;
-    border: 1px solid #ccc;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #fff;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.theme-option {
+#theme-select:hover {
+    border-color: #aaa;
+}
+
+#theme-select:focus {
+    outline: none;
+    border-color: #4285f4;
+    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+}
+
+/* Color Picker Styles */
+#color-picker-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#bgColorPicker {
+    display: none;
+}
+
+#colorPickerBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Open Sans', sans-serif;
     font-size: 14px;
+    transition: background-color 0.2s ease;
 }
 
-@media (max-width: 480px) {
+#colorPickerBtn:hover {
+    background: #3367d6;
+}
+
+.picker-icon {
+    font-size: 16px;
+}
+
+#currentColor {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    display: inline-block;
+    transition: border-color 0.2s ease;
+}
+
+#currentColor:hover {
+    border-color: #aaa;
+}
+
+@media (max-width: 768px) {
     #theme-selection {
-      bottom: 10px;
-      padding: 8px;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 8px 16px;
     }
-  
-    #theme-select {
-      font-size: 12px;
+
+    .picker-text {
+        display: none;
+    }
+
+    #colorPickerBtn {
+        padding: 8px;
     }
 }
-  
