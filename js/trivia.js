@@ -27,6 +27,7 @@ const triviaWidget = {
     },
     displayTriviaQuestion: function(apiData, browserData, triviaScore) {
         // get elements from HTML
+        const widgetElement = document.getElementById('trivia-container');
         const questionElement = document.getElementById('trivia-question');
         const optionsContainer = document.getElementById('trivia-options-container');
         const scoreElement = document.getElementById('trivia-score');
@@ -61,6 +62,7 @@ const triviaWidget = {
             });
             optionsContainer.appendChild(optionButton);
         });
+        widgetElement.style.display = "block";
     },
     handleAnswer: function(selectedOption, correctAnswer, triviaScore, optionButton) {
         const isCorrect = selectedOption === correctAnswer;
