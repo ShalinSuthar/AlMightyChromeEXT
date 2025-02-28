@@ -1,32 +1,82 @@
-/* Typewriter Effect */
 #quote-text {
     display: inline-block;
     overflow: hidden;
     white-space: pre-wrap;
     word-wrap: break-word;
-    font-size: 2rem;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', fantasy;
+    font-size: 2.5rem;
     font-weight: bold;
+    font-stretch: expanded;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    color: white;
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    min-width: 300px;
+    width: max-content;
+    max-width: 80vw;
+    position: relative;
+}
+
+#quote-text.typing {
     border-right: 3px solid rgba(255, 255, 255, 0.8);
-    animation: blinkCursor 0.8s infinite;
+    animation: blinkCursor 0.8s steps(1) infinite;
 }
 
 @keyframes blinkCursor {
-    50% { border-color: transparent; }
+    0%, 100% { 
+        border-right-color: rgba(255, 255, 255, 0.8);
+    }
+    50% { 
+        border-right-color: transparent;
+    }
 }
-
-/* Position must be absolute for draggable component:
-
-An absolutely positioned element no longer exists in the normal document flow. 
-Instead, it sits on its own layer separate from everything else. 
-This is very useful: it means that we can create isolated UI features that don't interfere with the layout of other elements on the page.
-
-See https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/CSS_layout/Positioning
-*/
 .draggable-component {
     position: absolute;
-    /* Set the quote to render at the center bottom-half of the page */
     top: 75%;
     left: 50%;
-    /* shifts the element so it is centered around its own midpoint */
     transform: translate(-50%, 50%);
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
+    width: auto;
+    min-width: min-content; 
+    white-space: normal;
+    box-sizing: border-box;
+}
+
+.draggable-component:active {
+    width: var(--original-width);
+}
+
+
+#quote-text:hover {
+    transform: scale(1.02);
+    transition: transform 0.3s ease;
+}
+
+@media (prefers-color-scheme: light) {
+    #quote-text {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    #quote-text {
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+}
+
+@media (min-width: 1200px) {
+    #quote-text {
+        max-width: 1000px;
+    }
+}
+
+@media (max-width: 768px) {
+    #quote-text {
+        font-size: 2rem;
+        min-width: 250px;
+    }
 }

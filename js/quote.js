@@ -65,16 +65,21 @@ const quoteWidget = {
       });
     });
     function typeWriterEffect(text, element) {
+      element.classList.add('typing'); // Add typing class at start
       let index = 0;
+      
       function type() {
-        if (index < text.length) {
-          element.innerHTML += text.charAt(index);
-          index++;
-          setTimeout(type, 100); // We can adjust speed here
-        }
+          if (index < text.length) {
+              element.innerHTML += text.charAt(index);
+              index++;
+              setTimeout(type, 100);
+          } else {
+              element.classList.remove('typing'); // Remove typing class when done
+          }
       }
       type();
-    }
+  }
+  
   }
 }
 

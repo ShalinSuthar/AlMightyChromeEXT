@@ -3,6 +3,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function makeDraggable(element) {
+    element.addEventListener('mousedown', () => {
+        const width = quoteContainer.offsetWidth;
+        quoteContainer.style.setProperty('--original-width', `${width}px`);
+    });
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
     // When the user presses down on the element, start the drag
