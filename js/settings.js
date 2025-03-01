@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function updateWidgets() {
     chrome.storage.sync.get("enabledWidgets", (data) => {
         const enabled = data.enabledWidgets || [];
+        toggleThemeSelection();
 
         widgets.forEach(widget => {
             if (enabled.includes(widget.id)) {
@@ -64,4 +65,21 @@ function updateWidgets() {
             }
         });
     });
+
+    const iamSelector = document.getElementById("iamSelector");
+
+    function toggleThemeSelection() {
+        chrome.storage.sync.get("enabledWidgets", (data) => {
+            const enabledWidgets = data.enabledWidgets || [];
+            if (enabledWidgets.includes("quote")) {
+                iamSelector.style.display = "block";
+            } else {
+                iamSelector.style.display = "none";
+            }
+        });
+    }
+
+    document.getElementById("widget-list").addEventListener("change", toggleThemeSelection);
+
+    toggleThemeSelection();
 }
