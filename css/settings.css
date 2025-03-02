@@ -14,8 +14,23 @@
     background-color: rgba(0, 0, 0, 0.05);
 }
 
-.settings-icon {
-    font-size: 20px;
+#settingsBtn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+#settingsBtn:hover {
+    background: #3367d6;
 }
 
 #widget-settings {
