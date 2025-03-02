@@ -8,7 +8,7 @@
 
 #theme-selection {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     gap: 20px;
     padding: 12px 24px;
@@ -87,18 +87,18 @@
     font-size: 16px;
 }
 
-#currentColor {
+/* #currentColor {
     width: 24px;
     height: 24px;
     border-radius: 50%;
     border: 2px solid #ddd;
     display: inline-block;
     transition: border-color 0.2s ease;
-}
+} */
 
-#currentColor:hover {
+/* #currentColor:hover {
     border-color: #aaa;
-}
+} */
 
 @media (max-width: 768px) {
     #theme-selection {

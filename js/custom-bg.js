@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (result.backgroundColor) {
             document.body.style.backgroundColor = result.backgroundColor;
             colorPicker.value = result.backgroundColor;
-            currentColor.style.backgroundColor = result.backgroundColor;
+            // currentColor.style.backgroundColor = result.backgroundColor;
         }
     });
 
@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
     colorPicker.addEventListener('change', (e) => {
         const newColor = e.target.value;
         document.body.style.backgroundColor = newColor;
-        currentColor.style.backgroundColor = newColor;
-        currentColor.style.borderColor = '#aaa';
+        // currentColor.style.backgroundColor = newColor;
+        // currentColor.style.borderColor = '#aaa';
         
         // Save the selected color
         chrome.storage.local.set({

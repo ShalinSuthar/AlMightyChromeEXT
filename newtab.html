@@ -17,32 +17,27 @@
 </head>
 
 <body>
-  <!-- Commenting out the nav bar for now -->
-  <!-- <div class="navbar">
-    <a class="links" href="https://www.google.com/search?">Google Search</a>
-    <a class="links" href="https://www.google.com/advanced_search">Google Advanced Search</a>
-  </div> -->
   <div id="top-controls">
     <div id="theme-selection">
-      <div id="iamSelector" class="control-group">
-        <label id="theme-label" for="theme-select">i'm a...</label>
+      <div id="iamSelector" class="control-group" title="Select who you are">
+        <label id="theme-label" for="theme-select">I'm a...</label>
         <select id="theme-select">
-          <option class="theme-option" value="writer">writer</option>
-          <option class="theme-option" value="engineer">engineer</option>
-          <option class="theme-option" value="wanderer">wanderer</option>
+          <option class="theme-option" value="writer">Writer</option>
+          <option class="theme-option" value="engineer">Engineer</option>
+          <option class="theme-option" value="wanderer">Wanderer</option>
         </select>
       </div>
      
-      <div id="color-picker-container" class="control-group">
+      <div id="color-picker-container" class="control-group" title="Pick a background color">
         <input type="color" id="bgColorPicker">
-        <button id="colorPickerBtn">
+        <button id="colorPickerBtn" title="Change background color">
           <span class="picker-icon">🎨</span>
           <span class="picker-text">Background</span>
         </button>
-        <span id="currentColor"></span>
+        <!-- <span id="currentColor"></span> -->
       </div>
 
-      <div class="control-group">
+      <div class="control-group" title="Open widgets">
         <button id="settingsBtn" class="icon-button">
           <span class="settings-icon">⚙️</span>
         </button>
@@ -55,69 +50,46 @@
 </div>
 
   <div id="main">
-    <!-- hiding notes for now -->
-    <!-- <div class="draggable-component custom-note" id="noteId">
-      <textarea id="note-content">This is my draggable note.</textarea>
-      <div class="note-controls">
-        <button id="edit-button">Edit</button>
-        <button id="delete-button">Delete</button>
-      </div>
-    </div> -->
-
-    <img class="logo" src="static/GoogleLogo.png" alt="Google Logo">
+    <img class="logo" src="static/GoogleLogo.png" alt="Google Logo" title="Google Logo">
     <span id="logo-subtitle">Search</span>
     <form id="sub" action="https://google.com/search">
-      <!-- <input type="hidden" value="isch" name="tbm"> -->
-      <input class="default-input" type="text" name="q">
-      <input class="default-search" id="image-search" type="submit" value="Google Image Search">
+      <input class="default-input" type="text" name="q" title="Enter search query">
+      <input class="default-search" id="image-search" type="submit" value="Google Image Search" title="Search images on Google">
     </form>
-    <!-- Shortcuts -->
+    
     <div id="shortcutContainer"></div>
-    <button id="addShortcutBtn">+ Add Shortcut</button>
-    <!-- Simple modal for adding/editing shortcuts -->
-    <div id="shortcutModal" style="display:none;">
+    <button id="addShortcutBtn" title="Add a new shortcut">+ Add Shortcut</button>
+    
+    <div id="shortcutModal" style="display:none;" title="Shortcut settings">
       <div class="modal-content">
         <h2 id="modalTitle">Add Shortcut</h2>
         <label for="shortcutTitle">Name</label>
-        <input type="text" id="shortcutTitle" />
+        <input type="text" id="shortcutTitle" title="Enter shortcut name"/>
         <label for="shortcutUrl">URL</label>
-        <input type="url" id="shortcutUrl" />
-        <button id="saveShortcutBtn">Save</button>
-        <button id="cancelShortcutBtn">Cancel</button>
+        <input type="url" id="shortcutUrl" title="Enter shortcut URL"/>
+        <button id="saveShortcutBtn" title="Save shortcut">Save</button>
+        <button id="cancelShortcutBtn" title="Cancel">Cancel</button>
       </div>
     </div>
-    <!-- Quote container added here -->
-    <div id="quote-container" class="draggable-component">
+    
+    <div id="quote-container" class="draggable-component" title="Daily Quote">
       <blockquote class="typewriter" id="quote-text"></blockquote>
     </div>
   </div>
-  <!-- Trivia container added here  -->
-  <div class="draggable-component" id="trivia-container">
-    <div id="trivia-score"></div>
-    <h3 id="trivia-question"></h3>
-    <div id="trivia-options-container"></div>
-  </div>
-  <!-- <div>
-    <select id="theme-select">
-      <option value="inspirational">Inspirational</option>
-      <option value="motivational">Motivational</option>
-      <option value="melancholic">Melancholic</option>
-      <option value="happy">Happy</option>
-      <option value="thoughtful">Thought-Provoking</option>
-    </select>
-  </div>
   
-  </div> -->
+  <div class="draggable-component" id="trivia-container" title="Trivia game">
+    <div id="trivia-score" title="Your trivia score"></div>
+    <h3 id="trivia-question" title="Trivia Question"></h3>
+    <div id="trivia-options-container" title="Choose your answer"></div>
+  </div>
   
   <script src="js/quote.js"></script>
   <script src="js/trivia.js"></script>
   <script src="js/preferences.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/shortcuts.js"></script>
-  <!-- load widgets renderer last -->
   <script src="js/draggable.js"></script>
   <script src="js/widgets.js"></script>
   <script src="js/custom-bg.js"></script>
 </body>
-
 </html>
