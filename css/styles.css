@@ -198,12 +198,6 @@ hr+p {
   justify-self: right;
 }
 
-.draggable-component {
-  cursor: grab;
-}
-.draggable-component.dragging {
-  cursor: grabbing;
-}
 .custom-note {
   position: absolute;
   background-color: #245768;
@@ -231,3 +225,22 @@ hr+p {
   margin-left: 5px;
   cursor: pointer;
 }
+
+.draggable-component {
+  cursor: grab;
+  user-select: none; 
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2); 
+  border: 1px dashed rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+
+.draggable-component:hover {
+  border-color: cyan; 
+}
+
+.draggable-component.dragging {
+  cursor: grabbing;
+  opacity: 0.5;
+  box-shadow: 4px 4px 12px rgba(158, 250, 144, 0.655);
+}
+
