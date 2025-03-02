@@ -1,29 +1,26 @@
-/* Trivia Container */
 #trivia-container {
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-    width: 100%;
-    position: absolute; /* Stick to bottom */
-    bottom: 10px; /* Distance from bottom */
-    left: 50%;
-    transform: translateX(-50%); /* Center horizontally */
-    text-align: center;
-    padding: 20px;
-    background: rgba(248, 249, 250, 0.95); /* Slight transparency */
-    border-radius: 10px;
+    position: absolute; 
+    padding: 10px;
+    background: rgba(248, 249, 250, 0.95);
+    border: 1px solid #ccc;
+    border-radius: 8px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    /* hardcode max height of widget. */
-    max-height: 375px;
+    width: 300px; 
+    height: auto;
+    max-width: 100%;
 }
 
-/* Question */
+#trivia-score {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
 #trivia-question {
-    font-size: 1.5rem;
+    font-size: 18px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-/* Options */
 #trivia-options-container {
     display: flex;
     flex-direction: column;
@@ -32,12 +29,12 @@
 
 .trivia-button {
     padding: 10px;
-    border: none;
-    font-size: 1rem;
     background-color: #007bff;
     color: white;
-    border-radius: 5px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
+    text-align: left;
     transition: background 0.3s ease;
 }
 

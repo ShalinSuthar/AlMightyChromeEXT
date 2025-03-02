@@ -26,43 +26,31 @@ const triviaWidget = {
       });
     },
     displayTriviaQuestion: function(apiData, browserData, triviaScore) {
-        // get elements from HTML
         const widgetElement = document.getElementById('trivia-container');
         const questionElement = document.getElementById('trivia-question');
         const optionsContainer = document.getElementById('trivia-options-container');
         const scoreElement = document.getElementById('trivia-score');
-        const triviaContainer = document.getElementById('trivia-container');
-
-        // render widget according to its last saved position
+        
         let triviaX = browserData.triviaX;
         let triviaY = browserData.triviaY;
-        triviaContainer.style.left = `${triviaX}px`;
-        triviaContainer.style.top = `${triviaY}px`;
+        widgetElement.style.left = `${triviaX}px`;
+        widgetElement.style.top = `${triviaY}px`;
     
         questionElement.textContent = apiData.question;
-        // clear any previous options appended to the container
         optionsContainer.innerHTML = "";
-
-        // display user score
+    
         scoreElement.textContent = `Score: ${triviaScore}`;
-
-        // change color based on difficulty
-        triviaContainer.className = '';
-        triviaContainer.classList.add(apiData.difficulty);
-
-        // iterate through options JSON object
+    
+        widgetElement.style.display = "block"; 
         Object.entries(apiData.options).forEach(([key, value]) => {
             const optionButton = document.createElement('button');
             optionButton.textContent = `${key}. ${value}`;
             optionButton.classList.add('trivia-button');
             optionButton.addEventListener("click", () => {
-                // e.g., if "b" equals "b", then correct
                 this.handleAnswer(key, apiData.answer, triviaScore, optionButton);
-                optionButton.classList.add(selectedOption === correctAnswer ? 'correct' : 'wrong');
             });
             optionsContainer.appendChild(optionButton);
         });
-        widgetElement.style.display = "block";
     },
     handleAnswer: function(selectedOption, correctAnswer, triviaScore, optionButton) {
         const isCorrect = selectedOption === correctAnswer;
@@ -77,7 +65,7 @@ const triviaWidget = {
                 this.loadAndDisplayTriviaQuestion();
             });
         }, 250);
-    }
-}
+ }    
+}    
   
 window.triviaWidget = triviaWidget;
