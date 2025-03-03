@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const widgetSettings = document.getElementById("widget-settings");
     const widgetList = document.getElementById("widget-list");
     const iamSelector = document.getElementById("iamSelector");
+    const addShortcutBtn = document.getElementById("addShortcutBtn");
 
     settingsBtn.addEventListener("click", (e) => {
         e.stopPropagation();
@@ -38,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 chrome.storage.sync.set({ enabledWidgets }, () => {
                     updateWidgets();
-                    toggleThemeSelection(); // Ensure correct visibility when widget changes
+                    toggleWidgetVisibility(); 
                 });
             });
 
@@ -48,13 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
             widgetList.appendChild(widgetItem);
         });
 
-        toggleThemeSelection(); // Ensure correct visibility on page load
+        toggleWidgetVisibility();
     });
 
     function updateWidgets() {
         chrome.storage.sync.get("enabledWidgets", (data) => {
             const enabled = data.enabledWidgets || [];
-            toggleThemeSelection();
+            toggleWidgetVisibility();
     
             widgets.forEach(widget => {
                 if (enabled.includes(widget.id)) {
@@ -67,19 +68,28 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
             });
-        })};
+        });
+    }
 
-    function toggleThemeSelection() {
+    function toggleWidgetVisibility() {
         chrome.storage.sync.get("enabledWidgets", (data) => {
             const enabledWidgets = data.enabledWidgets || [];
+
+            
             if (enabledWidgets.includes("quote")) {
                 iamSelector.style.display = "block";
             } else {
                 iamSelector.style.display = "none";
             }
+
+            if (enabledWidgets.includes("shortcuts")) {
+                addShortcutBtn.style.display = "block";
+            } else {
+                addShortcutBtn.style.display = "none";
+            }
         });
     }
 
-    // Ensure correct display of iamSelector if widget settings change
-    document.getElementById("widget-list").addEventListener("change", toggleThemeSelection);
+    // Ensure correct display of widgets if settings change
+    document.getElementById("widget-list").addEventListener("change", toggleWidgetVisibility);
 });
