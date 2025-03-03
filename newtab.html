@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/settings.css">
   <link rel="stylesheet" href="css/themes.css">
   <link rel="stylesheet" href="css/trivia.css">
+  <link rel="stylesheet" href="css/feedback.css">
   <link rel="stylesheet" href="css/shortcuts.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
   <title>Google Image Search</title>
@@ -26,6 +27,15 @@
           <option class="theme-option" value="engineer">Engineer</option>
           <option class="theme-option" value="wanderer">Wanderer</option>
         </select>
+      </div>
+
+      <div id="feedback-icon">💡</div>
+      <div id="feedback-dialog" class="hidden">
+        <div id="feedback-dialog-content">
+          <h3>We'd love to hear from you!</h3>
+          <textarea id="feedback-input" placeholder="Quotes, new features..."></textarea>
+          <button id="feedback-send-button">Send Feedback</button>
+        </div>
       </div>
      
       <div id="color-picker-container" class="control-group" title="Pick a background color">
@@ -90,6 +100,7 @@
   <script src="js/preferences.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/shortcuts.js"></script>
+  <script src="js/feedback.js"></script>
   <script src="js/draggable.js"></script>
   <script src="js/widgets.js"></script>
   <script src="js/custom-bg.js"></script>
