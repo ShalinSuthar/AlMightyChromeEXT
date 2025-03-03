@@ -54,12 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateWidgets() {
         chrome.storage.sync.get("enabledWidgets", (data) => {
-            const enabled = data.enabledWidgets || [];
+            const enabledWidgets = data.enabledWidgets || [];
             toggleWidgetVisibility();
     
             widgets.forEach(widget => {
-                if (enabled.includes(widget.id)) {
-                    widget.render();
+                const widgetElement = document.getElementById(`${widget.id}-container`);
+    
+                if (enabledWidgets.includes(widget.id)) {
+                    // Only call render widget if thew idget is not already selected
+                    if (!widgetElement || widgetElement.style.display === "none") {
+                        widget.render();
+                    }
                 } else {
                     try {
                         widget.hide();
@@ -70,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
-
+    
     function toggleWidgetVisibility() {
         chrome.storage.sync.get("enabledWidgets", (data) => {
             const enabledWidgets = data.enabledWidgets || [];
