@@ -4,7 +4,7 @@
     white-space: pre-wrap;
     word-wrap: break-word;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', fantasy;
-    font-size: 2.5rem;
+    font-size: 1.8rem;
     font-weight: bold;
     font-stretch: expanded;
     letter-spacing: 1px;
@@ -79,4 +79,11 @@
         font-size: 2rem;
         min-width: 250px;
     }
+}
+
+blockquote {
+    margin-block-start: 0.5em;
+    margin-block-end: 0.5em;
+    margin-inline-start: 40px;
+    margin-inline-end: 40px;
 }
