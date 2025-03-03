@@ -18,21 +18,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Send the feedback to your backend
     feedbackSendButton.addEventListener('click', async () => {
-    const feedbackText = feedbackInput.value.trim();
-    if (!feedbackText) return;
-
-    try {
-        await fetch('https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ feedback: feedbackText })
-        });
-        alert('Thanks for your feedback!');
-        feedbackInput.value = '';
-        feedbackDialog.classList.add('hidden');
-    } catch (error) {
-        console.error('Error submitting feedback:', error);
-        alert('Something went wrong. Please try again later.');
-    }
+        const feedbackText = feedbackInput.value.trim();
+        if (!feedbackText) return;
+        try {
+            // Use a POST request with JSON body
+            fetch('https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/submitFeedback', {
+                method: 'POST',
+                body: JSON.stringify({ feedback: feedbackText })
+            })
+            .then(response => {
+                // Optionally, you can check if (!response.ok) throw ...
+                return response.json();
+            })
+            .then(data => {
+                alert('Thanks for your feedback!');
+                feedbackInput.value = '';
+                feedbackDialog.classList.add('hidden');
+            })
+            .catch(error => {
+                console.error('Error submitting feedback:', error);
+                alert('Something went wrong. Please try again later.');
+            });
+        } catch (error) {
+            console.error('Error submitting feedback:', error);
+            alert('Something went wrong. Please try again later.');
+        }
     });
 });
