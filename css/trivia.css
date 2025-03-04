@@ -9,6 +9,8 @@
     width: 300px; 
     height: auto;
     max-width: 100%;
+    top: 13%;
+    left: 60%;
 }
 
 #trivia-question {

@@ -17,40 +17,55 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Load saved widget preferences
-    chrome.storage.sync.get("enabledWidgets", (data) => {
-        let enabledWidgets = data.enabledWidgets || [];
-
+    chrome.storage.sync.get(["enabledWidgets", "firstTimeInstall"], (data) => {
+        let enabledWidgets = data.enabledWidgets;
+        let firstTime = data.firstTimeInstall;
+    
+        if (firstTime === undefined) {
+            // First-time install: Enable all widgets
+            enabledWidgets = widgets.map(widget => widget.id);
+            chrome.storage.sync.set({ enabledWidgets, firstTimeInstall: false });
+        }
+    
         widgets.forEach(widget => {
             const widgetItem = document.createElement("div");
             widgetItem.className = "widget-item";
-
+    
             const label = document.createElement("label");
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.checked = enabledWidgets.includes(widget.id);
-
+            checkbox.checked = enabledWidgets.includes(widget.id); // ✅ Check if enabled
+    
             const text = document.createTextNode(widget.name);
-
+    
             checkbox.addEventListener("change", () => {
-                if (checkbox.checked) {
-                    enabledWidgets.push(widget.id);
-                } else {
-                    enabledWidgets = enabledWidgets.filter(id => id !== widget.id);
-                }
-                chrome.storage.sync.set({ enabledWidgets }, () => {
-                    updateWidgets();
-                    toggleWidgetVisibility(); 
+                chrome.storage.sync.get("enabledWidgets", (data) => {
+                    let updatedWidgets = data.enabledWidgets || [];
+    
+                    if (checkbox.checked) {
+                        if (!updatedWidgets.includes(widget.id)) {
+                            updatedWidgets.push(widget.id);
+                        }
+                    } else {
+                        updatedWidgets = updatedWidgets.filter(id => id !== widget.id);
+                    }
+    
+                    chrome.storage.sync.set({ enabledWidgets: updatedWidgets }, () => {
+                        updateWidgets();
+                        toggleWidgetVisibility();
+                    });
                 });
             });
-
+    
             label.appendChild(checkbox);
             label.appendChild(text);
             widgetItem.appendChild(label);
             widgetList.appendChild(widgetItem);
         });
-
+    
         toggleWidgetVisibility();
     });
+    
 
     function updateWidgets() {
         chrome.storage.sync.get("enabledWidgets", (data) => {
