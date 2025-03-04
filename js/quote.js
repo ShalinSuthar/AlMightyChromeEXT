@@ -2,7 +2,7 @@
 const quoteWidget = {
   id: "quote",
   name: "Quotes",
-  render: function() {
+  render: function () {
     this.loadAndDisplayQuote();
     // Listen for theme changes in storage
     chrome.storage.onChanged.addListener((changes, areaName) => {
@@ -13,13 +13,20 @@ const quoteWidget = {
       }
     });
   },
-  hide: function() {
+  hide: function () {
+    const quoteContainer = document.getElementById("quote-text");
+    if (quoteContainer) {
+      quoteContainer.textContent = "";
+      quoteContainer.classList.remove('typing');
+    }
     const widgetElement = document.getElementById('quote-container');
     if (widgetElement) {
-        widgetElement.style.display = "none";
+      widgetElement.style.display = "none";
     }
   },
-  loadAndDisplayQuote: function() {
+  loadAndDisplayQuote: function () {
+    const quoteContainer = document.getElementById("quote-text");
+    quoteContainer.textContent = "";
     // fetch user theme preference
     chrome.storage.sync.get('preferredTheme', (data) => {
       let selectedTheme = data.preferredTheme || 'default';
@@ -36,9 +43,9 @@ const quoteWidget = {
             // render quote
             const widgetElement = document.getElementById('quote-container');
             widgetElement.style.display = "block";
-            const quoteContainer = document.getElementById("quote-text");
+
             quoteContainer.textContent = randomQuote;
-            
+
             // modulo makes sure we don't hit an out of bounds error, and loops us back to the first quote
             // once customer has seen all the quotes for this category
 
@@ -65,21 +72,40 @@ const quoteWidget = {
       });
     });
     function typeWriterEffect(text, element) {
-      element.classList.add('typing'); // Add typing class at start
+      element.classList.add('typing');
+      element.innerHTML = "";
       let index = 0;
-      
+
+      let typingActive = true;
+
       function type() {
-          if (index < text.length) {
-              element.innerHTML += text.charAt(index);
-              index++;
-              setTimeout(type, 100);
-          } else {
-              element.classList.remove('typing'); // Remove typing class when done
-          }
+        if (!typingActive) return;
+        if (index < text.length) {
+          element.innerHTML += text.charAt(index);
+          index++;
+          setTimeout(type, 100);
+        } else {
+          element.classList.remove('typing');
+        }
       }
+
       type();
-  }
-  
+
+      quoteWidget.hide = function () {
+        typingActive = false;
+        if (element) {
+          element.textContent = "";
+          element.innerHTML = "";
+          element.classList.remove('typing');
+        }
+        const widgetElement = document.getElementById('quote-container');
+        if (widgetElement) {
+          widgetElement.style.display = "none";
+        }
+      };
+    }
+
+
   }
 }
 

@@ -4,9 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function makeDraggable(element) {
     element.addEventListener('mousedown', () => {
-        const width = quoteContainer.offsetWidth;
-        quoteContainer.style.setProperty('--original-width', `${width}px`);
+        const width = element.offsetWidth; // <-- Changed from quoteContainer to element
+        element.style.setProperty('--original-width', `${width}px`);
     });
+
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
     // When the user presses down on the element, start the drag
@@ -44,7 +45,8 @@ function makeDraggable(element) {
         // Stop moving when mouse is released
         document.removeEventListener('mouseup', onMouseUp);
         document.removeEventListener('mousemove', onMouseMove);
-        // set position of the widget after dragging
+
+        // Save position of the widget after dragging
         chrome.storage.sync.set({ 'triviaX': element.offsetLeft, 'triviaY': element.offsetTop });
     }
 }
