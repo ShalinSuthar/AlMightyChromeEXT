@@ -16,22 +16,22 @@ const shortcutsWidget = {
 
   editIndex: null,
 
-  hide: function() {
+  hide: function () {
     this.shortcutContainer = document.getElementById("shortcutContainer");
     if (this.shortcutContainer) {
-        this.shortcutContainer.style.display = "none";
+      this.shortcutContainer.style.display = "none";
     }
   },
 
-  updateAddButtonState: function() {
-      if (this.addShortcutBtn) {
-          this.addShortcutBtn.disabled = this.shortcuts.length >= this.MAX_SHORTCUTS;
-          this.addShortcutBtn.title = this.shortcuts.length >= this.MAX_SHORTCUTS ? 
-              'Maximum shortcuts limit reached (10)' : 'Add new shortcut';
-      }
+  updateAddButtonState: function () {
+    if (this.addShortcutBtn) {
+      this.addShortcutBtn.disabled = this.shortcuts.length >= this.MAX_SHORTCUTS;
+      this.addShortcutBtn.title = this.shortcuts.length >= this.MAX_SHORTCUTS ?
+        'Maximum shortcuts limit reached (10)' : 'Add new shortcut';
+    }
   },
 
-  render: function() {
+  render: function () {
     this.shortcutContainer = document.getElementById("shortcutContainer");
     this.shortcutContainer.style.display = "flex";
     this.addShortcutBtn = document.getElementById("addShortcutBtn");
@@ -41,17 +41,20 @@ const shortcutsWidget = {
     this.shortcutUrlInput = document.getElementById("shortcutUrl");
     this.saveShortcutBtn = document.getElementById("saveShortcutBtn");
     this.cancelShortcutBtn = document.getElementById("cancelShortcutBtn");
-    
+
     this.initEventListeners();
     this.loadShortcutsAndRender();
   },
 
-  initEventListeners: function() {
-    this.addShortcutBtn.addEventListener("click", () => {
+  initEventListeners: function () {
+    this.addShortcutBtn.removeEventListener("click", this.handleAddShortcut);
+    this.handleAddShortcut = () => {
       if (this.shortcuts.length < this.MAX_SHORTCUTS) {
-          this.openAddModal();
+        this.openAddModal();
       }
-    });
+    };
+    this.addShortcutBtn.addEventListener("click", this.handleAddShortcut);
+
 
     this.saveShortcutBtn.addEventListener("click", () => {
       this.saveShortcut();
@@ -68,7 +71,7 @@ const shortcutsWidget = {
     });
   },
 
-  loadShortcutsAndRender: function() {
+  loadShortcutsAndRender: function () {
     chrome.storage.sync.get(["myShortcuts"], (result) => {
       this.shortcuts = result.myShortcuts || [];
       this.renderShortcuts();
@@ -76,24 +79,24 @@ const shortcutsWidget = {
     });
   },
 
-  renderShortcuts: function() {
+  renderShortcuts: function () {
     this.shortcutContainer.innerHTML = "";
 
     this.shortcuts.forEach((shortcut, index) => {
       const tile = document.createElement("div");
       tile.className = "shortcut-tile";
-      
+
       let domain;
       try {
-          domain = new URL(shortcut.url).hostname;
+        domain = new URL(shortcut.url).hostname;
       } catch {
-          domain = shortcut.url;
+        domain = shortcut.url;
       }
 
       const img = document.createElement("img");
       img.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
       img.onerror = () => {
-          img.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+        img.src = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
       };
 
       const span = document.createElement("span");
@@ -132,13 +135,15 @@ const shortcutsWidget = {
     this.updateAddButtonState();
   },
 
-  saveShortcutsToStorage: function() {
-    chrome.storage.sync.set({ myShortcuts: this.shortcuts }, () => {
+  saveShortcutsToStorage: function () {
+    const uniqueShortcuts = [...new Map(this.shortcuts.map(s => [s.url, s])).values()];
+    chrome.storage.sync.set({ myShortcuts: uniqueShortcuts }, () => {
+      this.shortcuts = uniqueShortcuts;
       this.renderShortcuts();
     });
   },
 
-  openAddModal: function() {
+  openAddModal: function () {
     if (this.shortcuts.length >= this.MAX_SHORTCUTS) {
       alert(`Maximum number of shortcuts (${this.MAX_SHORTCUTS}) reached!`);
       return;
@@ -150,7 +155,7 @@ const shortcutsWidget = {
     this.shortcutModal.style.display = "block";
   },
 
-  openEditModal: function(index) {
+  openEditModal: function (index) {
     this.editIndex = index;
     const item = this.shortcuts[index];
     this.modalTitle.textContent = "Edit Shortcut";
@@ -159,14 +164,14 @@ const shortcutsWidget = {
     this.shortcutModal.style.display = "block";
   },
 
-  deleteShortcut: function(index) {
+  deleteShortcut: function (index) {
     if (confirm('Are you sure you want to delete this shortcut?')) {
       this.shortcuts.splice(index, 1);
       this.saveShortcutsToStorage();
     }
   },
 
-  saveShortcut: function() {
+  saveShortcut: function () {
     const title = this.shortcutTitleInput.value.trim();
     let url = this.shortcutUrlInput.value.trim();
 
@@ -192,7 +197,7 @@ const shortcutsWidget = {
         }
         this.shortcuts.push({ title, url });
       }
-  
+
       this.saveShortcutsToStorage();
       this.closeModal();
     } catch (e) {
@@ -200,7 +205,7 @@ const shortcutsWidget = {
     }
   },
 
-  closeModal: function() {
+  closeModal: function () {
     this.shortcutModal.style.display = "none";
   }
 };
