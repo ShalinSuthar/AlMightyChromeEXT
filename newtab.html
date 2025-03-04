@@ -40,7 +40,7 @@
           <button id="feedback-send-button">Send Feedback</button>
         </div>
       </div>
-     
+
       <div id="color-picker-container" class="control-group" title="Pick a background color">
         <input type="color" id="bgColorPicker">
         <button id="colorPickerBtn" title="Change background color">
@@ -55,43 +55,72 @@
           <span class="settings-icon">🔮</span>
           <span class="settings-text">Widgets</span>
         </button>
-       
+
         <div id="widget-settings" class="settings-dropdown">
           <h3>Widgets</h3>
           <div id="widget-list"></div>
         </div>
       </div>
+      <div>
+        <button id="info-button" class="icon-button right" title="Information">
+          <span class="info-icon">ℹ️</span>
+        </button>
+      </div>
     </div>
-</div>
+
+
+    <div id="info-popup" class="hidden">
+      <div id="info-popup-content">
+        <h3>What do you get</h3>
+        <ul>
+          <li class="info-item" data-tooltip="A new motivational quote on every tab load">Daily Quotes</li>
+          <li class="info-item" data-tooltip="Choose a theme that matches your mood">Quote Theme Selection</li>
+          <li class="info-item" data-tooltip="Pick any background color to personalize your page">Custom Background
+            Colors</li>
+          <li class="info-item" data-tooltip="Play trivia and test your knowledge">Trivia Game</li>
+          <li class="info-item" data-tooltip="Click, drag and drop each component at your desired position">Draggable
+            Elements</li>
+          <li class="info-item" data-tooltip="Select what you want to see on the screen using widgets">Customizable
+            Widgets</li>
+          <li class="info-item" data-tooltip="Manage your custom shortcuts for quick access">Shortcut Management</li>
+          <li class="info-item" data-tooltip="Send us feedback to improve your experience">Feedback Submission</li>
+          <li class="info-item" data-tooltip="Exciting new features coming soon!">And many more coming...</li>
+        </ul>
+      </div>
+    </div>
+
+
+  </div>
 
   <div id="main">
     <img class="logo" src="static/GoogleLogo.png" alt="Google Logo">
     <span id="logo-subtitle">Search</span>
     <form id="sub" action="https://google.com/search">
       <input class="default-input" type="text" name="q" title="Enter search query">
-      <input class="default-search" id="image-search" type="submit" value="Google Image Search" title="Search images on Google">
+      <input class="default-search" id="image-search" type="submit" value="Google Image Search"
+        title="Search images on Google">
     </form>
-    
+
     <div id="shortcutContainer"></div>
     <button id="addShortcutBtn" title="Add a new shortcut">+ Add Shortcut</button>
-    
+
     <div id="shortcutModal" style="display:none;" title="Shortcut settings">
       <div class="modal-content">
         <h2 id="modalTitle">Add Shortcut</h2>
         <label for="shortcutTitle">Name</label>
-        <input type="text" id="shortcutTitle" title="Enter shortcut name"/>
+        <input type="text" id="shortcutTitle" title="Enter shortcut name" />
         <label for="shortcutUrl">URL</label>
-        <input type="url" id="shortcutUrl" title="Enter shortcut URL"/>
+        <input type="url" id="shortcutUrl" title="Enter shortcut URL" />
         <button id="saveShortcutBtn" title="Save shortcut">Save</button>
         <button id="cancelShortcutBtn" title="Cancel">Cancel</button>
       </div>
     </div>
-    
+
     <div id="quote-container" class="draggable-component" title="Daily Quote">
       <blockquote class="typewriter" id="quote-text"></blockquote>
     </div>
   </div>
-  
+
   <div class="draggable-component" id="trivia-container" title="Trivia game">
     <div id="trivia-score-container" title="Your trivia score">
       <span id="trivia-score">Score: 0</span>
@@ -100,7 +129,7 @@
     <h4 id="trivia-question" title="Trivia Question"></h4>
     <div id="trivia-options-container" title="Choose your answer"></div>
   </div>
-  
+
   <script src="js/quote.js"></script>
   <script src="js/trivia.js"></script>
   <script src="js/preferences.js"></script>
@@ -111,4 +140,5 @@
   <script src="js/widgets.js"></script>
   <script src="js/custom-bg.js"></script>
 </body>
+
 </html>
