@@ -1,24 +1,24 @@
 
-.inspirational {
-   color: #EE204D!important;
+.thoughtful {
+   background: #003300!important;
 }
 
 
 .motivational {
-   color: #98FB98!important;
+   background: #660000!important;
 }
 
 
 .melancholic {
-    color: #04D9FF!important;
+  background: #2A3439!important;
 }
 
 
 .happy {
-    color: #FF007F!important;
+  background: #003366!important;
 }
 
 
-.thoughtful {
-  color: gold!important;
+.inspirational {
+  background: #F2CB05!important;
 }

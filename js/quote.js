@@ -60,7 +60,7 @@ const quoteWidget = {
 
             // Clear previous content and apply theme
             quoteContainer.textContent = "";
-            quoteContainer.className = quoteTheme ?? randomTheme;
+            widgetElement.classList.add(quoteTheme ?? randomTheme);
 
             // Apply typewriter effect
             typeWriterEffect(randomQuote, quoteContainer);
