@@ -1,11 +1,17 @@
 {
     "manifest_version": 3,
-    "name": "Custom Quote New Tab",
-    "description": "Display a custom quote on a new tab.",
+    "name": "EternaTab",
+    "description": "Infuse Your New Tab with Inspiration, Every Time!",
     "version": "1.0",
     "chrome_url_overrides": {
         "newtab": "newtab.min.html"
     },
+    "icons": {
+    "16": "static/infy-icon.png",
+    "32": "static/infy-icon.png",
+    "48": "static/infy-icon.png",
+    "128": "static/infy-icon.png"
+  },
     "permissions": [
         "storage"
     ],
