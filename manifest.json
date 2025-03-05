@@ -4,13 +4,12 @@
     "description": "Display a custom quote on a new tab.",
     "version": "1.0",
     "chrome_url_overrides": {
-      "newtab": "newtab.html"
+        "newtab": "newtab.min.html"
     },
     "permissions": [
         "storage"
     ],
     "background": {
-      "service_worker": "js/background.js"
+        "service_worker": "bundle.min.js"
     }
-  }
-  
+}
