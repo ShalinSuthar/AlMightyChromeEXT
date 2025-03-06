@@ -1,16 +1,16 @@
 {
     "manifest_version": 3,
-    "name": "EternaTab",
-    "description": "Infuse Your New Tab with Inspiration, Every Time!",
+    "name": "Newest NewTab",
+    "description": "Infuse Your New Tab with Infinite possibilities, Every Time!",
     "version": "1.0",
     "chrome_url_overrides": {
         "newtab": "newtab.min.html"
     },
     "icons": {
-    "16": "static/infy-icon.png",
-    "32": "static/infy-icon.png",
-    "48": "static/infy-icon.png",
-    "128": "static/infy-icon.png"
+    "16": "static/icon.png",
+    "32": "static/icon.png",
+    "48": "static/icon.png",
+    "128": "static/icon.png"
   },
     "permissions": [
         "storage"
