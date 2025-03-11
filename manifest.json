@@ -13,7 +13,8 @@
     "128": "static/icon.png"
   },
     "permissions": [
-        "storage"
+        "storage",
+        "search"
     ],
     "background": {
         "service_worker": "bundle.min.js"
