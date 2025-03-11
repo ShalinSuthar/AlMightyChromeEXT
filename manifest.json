@@ -7,7 +7,8 @@
       "newtab": "newtab.html"
     },
     "permissions": [
-        "storage"
+        "storage",
+        "search"
     ],
     "background": {
       "service_worker": "js/background.js"
