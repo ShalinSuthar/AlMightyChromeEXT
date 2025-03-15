@@ -23,10 +23,8 @@ const wotdWidget = {
             // Extract definition
             if (data && data.length > 0) {
                 const definition = data[0].meanings[0].definitions[0].definition;
-                console.log(`Word of the Day: ${word} - ${definition}`);
                 this.populateWordAndDefinition(word, definition);
             } else {
-                console.log("Definition not found. Trying again...");
                 this.loadWordOfTheDay(); // Retry if no definition found
             }
         } catch (error) {
