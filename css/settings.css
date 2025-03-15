@@ -61,6 +61,17 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    /* Scrolling functionality */
+    max-height: 125px; /* Adjust height as needed */
+    overflow-y: auto;
+    padding-right: 10px; /* Ensures content doesn't get cut off */
+    scrollbar-width: none; /* Hides scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hides scrollbar for Internet Explorer */
+}
+
+/* Hides scrollbar for Webkit browsers (Chrome, Safari) */
+#widget-list::-webkit-scrollbar {
+    display: none;
 }
 
 .widget-item {
