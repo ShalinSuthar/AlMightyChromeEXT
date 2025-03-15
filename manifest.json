@@ -10,6 +10,9 @@
         "storage",
         "search"
     ],
+    "host_permissions": [
+      "https://doa508wm14jjw.cloudfront.net/*"
+    ],
     "background": {
       "service_worker": "js/background.js"
     }
