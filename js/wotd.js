@@ -23,10 +23,8 @@ const wotdWidget = {
             // Extract definition
             if (data && data.length > 0) {
                 const definition = data[0].meanings[0].definitions[0].definition;
-                console.log(`Word of the Day: ${word} - ${definition}`);
                 this.populateWordAndDefinition(word, definition);
             } else {
-                console.log("Definition not found. Trying again...");
                 this.loadWordOfTheDay(); // Retry if no definition found
             }
         } catch (error) {
@@ -44,6 +42,10 @@ const wotdWidget = {
         if (definitionContainer) {
             definitionContainer.innerText = definition;
         }
+        chrome.storage.sync.get(['wotdX', 'wotdY'], (browserData) => {
+            widgetContainer.style.left = `${browserData.wotdX}px`;
+            widgetContainer.style.top = `${browserData.wotdY}px`;
+        });
         widgetContainer.style.display = "block";
         widgetContainer.classList.add("wotd-loaded");
     }
