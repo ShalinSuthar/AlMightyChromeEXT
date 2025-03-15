@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".draggable-component").forEach(makeDraggable);
+    document.querySelectorAll(".draggable-component").forEach(element => {
+        makeDraggable(element);
+    });
 });
 
 function makeDraggable(element) {
@@ -45,8 +47,9 @@ function makeDraggable(element) {
         // Stop moving when mouse is released
         document.removeEventListener('mouseup', onMouseUp);
         document.removeEventListener('mousemove', onMouseMove);
-
+        const xKey = `${element.id.split('-')[0].toLowerCase()}X`;
+        const yKey = `${element.id.split('-')[0].toLowerCase()}Y`;
         // Save position of the widget after dragging
-        chrome.storage.sync.set({ 'triviaX': element.offsetLeft, 'triviaY': element.offsetTop });
+        chrome.storage.sync.set({ [xKey]: element.offsetLeft, [yKey]: element.offsetTop });
     }
 }

@@ -42,6 +42,10 @@ const wotdWidget = {
         if (definitionContainer) {
             definitionContainer.innerText = definition;
         }
+        chrome.storage.sync.get(['wotdX', 'wotdY'], (browserData) => {
+            widgetContainer.style.left = `${browserData.wotdX}px`;
+            widgetContainer.style.top = `${browserData.wotdY}px`;
+        });
         widgetContainer.style.display = "block";
         widgetContainer.classList.add("wotd-loaded");
     }
