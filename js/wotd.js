@@ -5,7 +5,7 @@ const wotdWidget = {
         this.loadWordOfTheDay();
     },
     hide: function() {
-        const wotdElement = document.getElementById('wotd-container');
+        const wotdElement = document.getElementById('wotd-widget-container');
         if (wotdElement) {
             wotdElement.style.display = "none";
         }
@@ -44,6 +44,7 @@ const wotdWidget = {
         if (definitionContainer) {
             definitionContainer.innerText = definition;
         }
+        widgetContainer.style.display = "block";
         widgetContainer.classList.add("wotd-loaded");
     }
 };
