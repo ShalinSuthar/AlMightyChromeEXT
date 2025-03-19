@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const label = document.createElement("label");
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.checked = enabledWidgets.includes(widget.id); // ✅ Check if enabled
+            checkbox.checked = enabledWidgets.includes(widget.id);
 
             const text = document.createTextNode(widget.name);
 

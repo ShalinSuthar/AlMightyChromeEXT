@@ -1,0 +1,58 @@
+/* Ensure widget is hidden by default */
+#search-quiz-container {
+    width: 280px;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: "Arial", sans-serif;
+    text-align: center;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: translateY(10px);
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: block;
+}
+
+/* Question Styling */
+#search-quiz-question {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* Quiz Options Container */
+#search-quiz-options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Buttons for Multiple-Choice Options */
+.search-quiz-button {
+    display: block;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.search-quiz-button:hover {
+    background-color: #0056b3;
+}
+
+/* Correct/Wrong Feedback (Optional) */
+.correct-answer {
+    background-color: #28a745 !important; /* Green */
+}
+
+.wrong-answer {
+    background-color: #dc3545 !important; /* Red */
+}

@@ -8,7 +8,8 @@
     },
     "permissions": [
         "storage",
-        "search"
+        "search",
+        "history"
     ],
     "background": {
       "service_worker": "js/background.js"

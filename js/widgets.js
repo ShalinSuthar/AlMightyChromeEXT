@@ -1,5 +1,5 @@
 // array of widgets as global variables
-const widgets = [window.quoteWidget, window.triviaWidget, window.shortcutsWidget, window.wotdWidget];
+const widgets = [window.quoteWidget, window.triviaWidget, window.shortcutsWidget, window.wotdWidget, window.searchQuizWidget];
 
 // parent function to render widgets
 function loadWidgets() {
