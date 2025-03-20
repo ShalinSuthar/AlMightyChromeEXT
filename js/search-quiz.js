@@ -1,27 +1,25 @@
 const searchQuizWidget = {
     id: "search-quiz",
     name: "Search Quiz",
-    
     render: function() {
         console.log("Rendering");
         this.displaySearchQuizQuestion();
     },
-
     hide: function() {
         const widgetElement = document.getElementById('search-quiz-container');
         if (widgetElement) {
             widgetElement.style.display = "none";
         }
     },
-
     displaySearchQuizQuestion: function() {
         const widgetElement = document.getElementById('search-quiz-container');
-        const optionsContainer = document.getElementById('search-quiz-options-container');
         const questionElement = document.getElementById('search-quiz-question');
+        const searchQuizInput = document.getElementById('search-quiz-input');
+        const submitButton = document.getElementById("search-quiz-submit-button");
+
         if (!widgetElement) return;
         
         this.fetchSearchQuizQuestion().then(quiz => {
-            console.log();
             if (!quiz) {
                 widgetElement.innerText = "<p>No quiz available.</p>";
                 return;
@@ -29,18 +27,47 @@ const searchQuizWidget = {
             
             // Display question
             questionElement.innerText = quiz.question;
-            
-            quiz.options.forEach(option => {
-                console.log(option);
-                const button = document.createElement("button");
-                button.innerText = option;
-                button.onclick = () => this.handleSearchQuizQuestionAnswer(option, quiz.answer);
-                button.classList.add("search-quiz-button");
-                optionsContainer.appendChild(button);
-            });
 
+            // Reset input and feedback
+            searchQuizInput.value = "";
+
+            submitButton.onclick = () => this.submitAnswerAndReceiveFeedback(quiz.question, searchQuizInput.value.trim());
+            // display the widget
             widgetElement.style.display = "block";
         });
+    },
+    submitAnswerAndReceiveFeedback: async function(question, userAnswer) {
+        if (!userAnswer) { return; }
+
+        const feedbackElement = document.getElementById('search-quiz-feedback');
+        feedbackElement.innerText = "Evaluating...";
+        console.log(JSON.stringify({ "question": question, "answer": userAnswer }));
+        if (!question || !userAnswer) {
+            console.error("Missing question or userAnswer. Aborting request.");
+            return;
+        }
+        
+        try {
+            const response = await fetch("https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getSearchQuizAnswer", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ question: question, answer: userAnswer }),
+            });
+
+            if (!response.ok) {
+                feedbackElement.innerText = "Error evaluating answer.";
+                return;
+            }
+
+            const data = await response.json();
+            console.log(data);
+            feedbackElement.innerText = data.feedback;
+        } catch (error) {
+            console.error("Error fetching feedback:", error);
+            feedbackElement.innerText = "Error fetching feedback.";
+        }
     },
     fetchSearchQuizQuestion: async function() {
         try {
@@ -60,7 +87,7 @@ const searchQuizWidget = {
             }
     
             const quiz = await response.json();
-            return quiz; // Structured JSON: { question, options, answer }
+            return quiz;
         } catch (error) {
             console.error("Error fetching quiz from Lambda:", error);
             return null;
@@ -81,13 +108,6 @@ const searchQuizWidget = {
                 resolve(relevantSearch);
             });
         });
-    },
-    handleSearchQuizQuestionAnswer: function(selectedOption, correctAnswer) {
-        if (selectedOption === correctAnswer) {
-            alert("Correct!");
-        } else {
-            alert("Wrong. Try again.");
-        }
     }
 };
 
