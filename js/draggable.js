@@ -8,7 +8,6 @@ function makeDraggable(element) {
     element.addEventListener('mousedown', (e) => {
         const width = element.offsetWidth;
         element.style.setProperty('--original-width', `${width}px`);
-        console.log(e.target.tagName);
         if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
         onMouseDown(e);
     });
