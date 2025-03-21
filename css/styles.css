@@ -40,9 +40,15 @@ body {
 }
 
 #sub {
-  display: grid;
-  grid-template-columns: 1fr max-content max-content 1fr;
-  gap: 2rem 0.5rem;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: -1;
 }
 
 #sub input[type="text"] {
@@ -61,7 +67,7 @@ body {
 .default-input {
   outline: none;
   border: 2px solid rgb(243, 243, 243);
-  border-radius: 5rem;
+  border-radius: 0.5rem;
   padding: 0.5rem 1.5rem;
 }
 
