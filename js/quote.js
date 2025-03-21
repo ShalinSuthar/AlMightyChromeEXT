@@ -34,41 +34,43 @@ const quoteWidget = {
 
       chrome.storage.sync.get(indexKey, (indexData) => {
         let index = indexData[indexKey] || 0;
-        // fetch quotes from our backend API with two query params: index and category
+        // this is a possibility for us (i.e., using CDN). The only issue here is we're exposing our s3 bucket data, which
+        // might defeat the purpose of our "curation" strategy. Anyone can replicate our content in this case.
+        // Latency for this call is 1ms though, which is WAY faster than before (200-400ms) with Lambda.
+          fetch(`https://doa508wm14jjw.cloudfront.net/${selectedTheme}_quotes.json`)
+          .then(response =>response.json())
+          .then(quotes => {
 
-        fetch(`https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/quote?category=${selectedTheme}&index=${index}`)
-          .then(response => response.json())
-          .then(data => {
-            const randomQuote = data.text.text;
-            // render quote
-            const widgetElement = document.getElementById('quote-container');
-            widgetElement.style.display = "block";
+          // Filter quotes based on category (or fallback to all)
+          const filteredQuotes = quotes.filter(q => q.category.toLowerCase() === selectedTheme.toLowerCase());
 
-            quoteContainer.textContent = randomQuote;
+          if (filteredQuotes.length === 0) {
+              throw new Error(`No quotes found for category: ${selectedTheme}`);
+          }
 
-            // modulo makes sure we don't hit an out of bounds error, and loops us back to the first quote
-            // once customer has seen all the quotes for this category
+          // Get the specific quote at the given index
+          const randomQuote = filteredQuotes[index];
 
-            // Very simple example of what we want to acheive
-            // If the theme is being passed from the backend 
-            // then pick it from there
-            const quoteTheme = data.text?.theme;
+          // **Render quote**
+          const widgetElement = document.getElementById('quote-container');
+          widgetElement.style.display = "block";
+          quoteContainer.textContent = randomQuote.text;
 
-            // If not then we can define a list of predefined themes and pick one randomly
-            let themes = ["happy", "melancholic", "inspirational", "thoughtful", "motivational"];
-            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+          // **Pick a theme**
+          let themes = ["happy", "melancholic", "inspirational", "thoughtful", "motivational"];
+          const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+          widgetElement.classList.add(randomQuote.theme ?? randomTheme);
 
-            // Clear previous content and apply theme
-            quoteContainer.textContent = "";
-            widgetElement.classList.add(quoteTheme ?? randomTheme);
+          // **Typewriter effect**
+          typeWriterEffect(randomQuote.text, quoteContainer);
 
-            // Apply typewriter effect
-            typeWriterEffect(randomQuote, quoteContainer);
-
-            let nextIndex = (index + 1) % data.totalQuotes;
-            chrome.storage.sync.set({ [indexKey]: nextIndex });
-          })
-          .catch(error => console.error('Error fetching quote:', error));
+          // **Update index in storage**
+          let nextIndex = (index + 1) % filteredQuotes.length;
+          chrome.storage.sync.set({ [indexKey]: nextIndex });
+        })
+        .catch(error => {
+          console.error("Error fetching quote:", error);
+        });
       });
     });
     function typeWriterEffect(text, element) {
