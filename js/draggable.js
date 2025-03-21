@@ -5,15 +5,18 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function makeDraggable(element) {
-    element.addEventListener('mousedown', () => {
-        const width = element.offsetWidth; // <-- Changed from quoteContainer to element
+    element.addEventListener('mousedown', (e) => {
+        const width = element.offsetWidth;
         element.style.setProperty('--original-width', `${width}px`);
+        console.log(e.target.tagName);
+        if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+        onMouseDown(e);
     });
 
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
     // When the user presses down on the element, start the drag
-    element.addEventListener('mousedown', onMouseDown);
+    // element.addEventListener('mousedown', onMouseDown);
 
     function onMouseDown(e) {
         e.preventDefault();

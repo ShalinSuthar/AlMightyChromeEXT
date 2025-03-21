@@ -2,7 +2,6 @@ const searchQuizWidget = {
     id: "search-quiz",
     name: "Search Quiz",
     render: function() {
-        console.log("Rendering");
         this.displaySearchQuizQuestion();
     },
     hide: function() {
@@ -21,7 +20,7 @@ const searchQuizWidget = {
         
         this.fetchSearchQuizQuestion().then(quiz => {
             if (!quiz) {
-                widgetElement.innerText = "<p>No quiz available.</p>";
+                widgetElement.innerText = "No quiz available.";
                 return;
             }
             
@@ -41,7 +40,6 @@ const searchQuizWidget = {
 
         const feedbackElement = document.getElementById('search-quiz-feedback');
         feedbackElement.innerText = "Evaluating...";
-        console.log(JSON.stringify({ "question": question, "answer": userAnswer }));
         if (!question || !userAnswer) {
             console.error("Missing question or userAnswer. Aborting request.");
             return;
@@ -62,7 +60,6 @@ const searchQuizWidget = {
             }
 
             const data = await response.json();
-            console.log(data);
             feedbackElement.innerText = data.feedback;
         } catch (error) {
             console.error("Error fetching feedback:", error);
@@ -72,17 +69,14 @@ const searchQuizWidget = {
     fetchSearchQuizQuestion: async function() {
         try {
             const searchQuery = await this.getMostRelevantSearch();
-            console.log(searchQuery);
             if (!searchQuery) return null;
-    
-            console.log("Sending search query to backend:", searchQuery);
-    
+        
             const response = await fetch(`https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getSearchQuiz?searchQuery=${encodeURIComponent(searchQuery)}`, {
                 method: "GET",
             });
     
             if (!response.ok) {
-                console.error("Lambda request failed:", response.statusText);
+                console.error("Request failed:", response.statusText);
                 return null;
             }
     
@@ -99,12 +93,10 @@ const searchQuizWidget = {
 
             chrome.history.search({ text: "", maxResults: 5, startTime: oneHourAgo }, results => {
                 const searches = results.map(entry => entry.title);
-                console.log("Recent Searches:", searches);
                 const learningKeywords = ["how to", "what is", "guide", "tutorial", "explain", "learning", "science", "history"];
                 const relevantSearch = searches.find(search =>
                     learningKeywords.some(keyword => search.toLowerCase().includes(keyword))
                 ) || searches[0];
-                console.log("Selected search:", relevantSearch);
                 resolve(relevantSearch);
             });
         });
