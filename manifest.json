@@ -9,13 +9,15 @@
     "permissions": [
         "storage",
         "search",
-        "history"
+        "history",
+        "webNavigation"
     ],
     "host_permissions": [
       "https://doa508wm14jjw.cloudfront.net/*"
     ],
     "background": {
-      "service_worker": "js/background.js"
+      "service_worker": "js/background.js",
+      "type": "module"
     }
   }
   
