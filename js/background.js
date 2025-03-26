@@ -1,4 +1,4 @@
-import { addToJSONStructureAsync, extractQueryFromURL, isLearningRelatedSearch } from './knowledge-graph/add-to-graph.js';
+importScripts('./knowledge-graph/add-to-graph.js', './knowledge-graph/db-operations.js');
 
 chrome.runtime.onInstalled.addListener(() => {
     console.log('Extension installed!');
@@ -20,4 +20,6 @@ chrome.webNavigation.onCompleted.addListener(async ({ url }) => {
             }
         }, 0);
     }
+    // syncHistoryQueries(); (should run this as a cron job) 
+    // see https://developer.chrome.com/docs/extensions/reference/api/alarms
 });
