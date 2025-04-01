@@ -1,45 +1,64 @@
+function tokenize(text) {
+    return text.toLowerCase().match(/\b\w+\b/g) || [];
+}
+  
+function buildVocabAndIDF(allTokenizedQueries) {
+    const vocab = new Set();
+    const idf = {};
+    const N = allTokenizedQueries.length;
+
+    allTokenizedQueries.forEach(tokens => {
+        tokens.forEach(t => vocab.add(t));
+    });
+
+    const vocabArray = Array.from(vocab);
+    vocabArray.forEach(term => {
+        let docCount = 0;
+        allTokenizedQueries.forEach(tokens => {
+            if (tokens.includes(term)) docCount++;
+        });
+        idf[term] = Math.log(N / (1 + docCount));
+    });
+
+    return { vocab: vocabArray, idf };
+}
+
+function tfidfVector(tokens, vocab, idf) {
+    const tf = {};
+    tokens.forEach(t => tf[t] = (tf[t] || 0) + 1);
+    return vocab.map(term => (tf[term] || 0) * (idf[term] || 0));
+}
+  
+
 /**
  * This method adds a processed search query to a data structure stored on our user's browser
  * @param {*} query query search string
  */
-async function addToJSONStructureAsync(query) {
-    const sentenceEmbedding = await computeSentenceEmbedding(query);
-    const result = await getAllQueries();
-    let searchQueries = result || [];
-
+async function groupBySimilarity(existingQueries, queryObject) {
     let mostSimilar = null;
     let maxSimilarity = 0.0;
-    for (const previousQuery of searchQueries) {
-        const similarityToQuery = cosineSimilarity(sentenceEmbedding, previousQuery.sentenceEmbedding);
-        if (similarityToQuery > maxSimilarity) {
-            maxSimilarity = similarityToQuery;
-            mostSimilar = previousQuery;
-        }
+  
+    for (const existingQuery of existingQueries) {
+      const similarityToQuery = cosineSimilarity(queryObject.tfidfVector, existingQuery.tfidfVector);
+      if (similarityToQuery > maxSimilarity) {
+        maxSimilarity = similarityToQuery;
+        mostSimilar = existingQuery;
+      }
     }
-
-    // create a new query object
-    const newQueryObject = {
-        id: crypto.randomUUID(),
-        query,
-        timestamp: Date.now(),
-        sentenceEmbedding,
-        lastTimeAsked: null,
-        relatedQueries: []
-    };
-
+    if (maxSimilarity >= 0.99) return;
     const SIMILARITY_THRESHOLD = 0.7;
-    if (maxSimilarity >= SIMILARITY_THRESHOLD) {
-        const similarQueryObject = { similarQuery: newQueryObject, similarity: maxSimilarity }
-        mostSimilar.relatedQueries.push(similarQueryObject);
-        await saveQuery(mostSimilar);
+    if (maxSimilarity >= SIMILARITY_THRESHOLD && mostSimilar) {
+      const similarQueryObject = { similarQuery: queryObject.id, similarity: maxSimilarity };
+      mostSimilar.relatedQueries.push(similarQueryObject);
+      console.log("naughty");
+      await saveQuery(mostSimilar);
     }
-    await saveQuery(newQueryObject);
-}
+  }  
 
 // filter to avoid storing irrelevant searches
 function isLearningRelatedSearch(query, url) {
-    const learningDomains = ["wikipedia", "medium.com", "stackexchange", "stackoverflow"];
-    const learningKeywords = ["how", "why", "what", "tutorial", "guide", "explained", "when"];
+    const learningDomains = ["wikipedia", "medium.com", "stackexchange", "stackoverflow", "blog"];
+    const learningKeywords = ["how", "why", "what", "tutorial", "guide", "explained", "when", "where", "who"];
 
     return learningDomains.some(domain => url.includes(domain)) ||
            learningKeywords.some(word => query.toLowerCase().includes(word));
@@ -74,13 +93,21 @@ async function computeSentenceEmbedding(text) {
       const embedding = await response.json();
       return embedding;
     } catch (error) {
-      console.error("Error fetching embedding from backend:", error);
-      return [];
+        console.error("Error fetching embedding from backend:", error);
+        return [];
     }
 }
 
 // find similarity
 function cosineSimilarity(vecA, vecB) {
+    // if something went wrong calculating embeddings, we'll default to a low similarity
+    console.log("vecA:", vecA);
+    console.log("vecB:", vecB);
+    if (!Array.isArray(vecA) || !Array.isArray(vecB)) {
+        console.warn("Invalid vectors:", vecA, vecB);
+        return 0.4;
+    }
+    if (!vecA || !vecB) return 0.4;
     const dotProduct = vecA.reduce((sum, a, idx) => sum + a * vecB[idx], 0);
     const magnitude = v => Math.sqrt(v.reduce((sum, a) => sum + a * a, 0));
     return dotProduct / (magnitude(vecA) * magnitude(vecB));
@@ -97,41 +124,82 @@ async function getHistoryEntries(options) {
     });
 }
 
-// this doesn't work. need to fix (should probably only run this once per day)
 async function syncHistoryQueries() {
-    const oneWeekAgo = Date.now() - 1000 * 60 * 60 * 24 * 7;
-    const learningKeywords = ["how to", "what is", "guide", "tutorial", "explain", "learning", "science", "wiki"];
-
+    const startTime = await getLastSyncTime();
+  
     try {
-        const results = await getHistoryEntries({ text: "", maxResults: 20, startTime: oneWeekAgo });
-        const existingQueries = await getAllQueries();
-        // Extract the title for each history entry
-        const searches = results.map(entry => entry.title);
+      const results = await getHistoryEntries({ text: "", maxResults: 10, startTime });
+  
+      const filteredSearches = results
+        .map(entry => ({ title: entry.title, url: entry.url }))
+        .filter(search => isLearningRelatedSearch(search.title, search.url));
+  
+      const existingQueries = await getAllQueries();
+      const existingHashes = new Set(existingQueries.map(q => q.hash));
+      const tokenizedExisting = existingQueries.map(q => tokenize(q.query.title));
+      const { vocab, idf } = buildVocabAndIDF(tokenizedExisting);
+  
+      for (const query of filteredSearches) {
 
-        // Filter the searches to only include those with one of the learning keywords (case insensitive)
-        const filteredSearches = searches.filter(search => 
-            learningKeywords.some(keyword => search.toLowerCase().includes(keyword))
-        );
-
-        // Process each filtered search entry
-        for (const search of filteredSearches) {
-            for (const existingQuery of existingQueries) {
-                // avoid duplicates
-                if (search === existingQuery.query) break;
-                const embedding = await computeSentenceEmbedding(search);
-                const newQueryObject = {
-                    id: crypto.randomUUID(),
-                    search,
-                    timestamp: Date.now(),
-                    embedding,
-                    lastTimeAsked: null,
-                    relatedQueries: []
-                };
-                await saveQuery(newQueryObject);
-            }
+        const tokens = tokenize(query.title);
+        const vector = tfidfVector(tokens, vocab, idf);
+        const hash = await hashString(normalizeQueryForHash(query));
+        console.log(existingHashes);
+        if (existingHashes.has(hash)) {
+            console.log("Ignoring duplicate:", query.title);
+            continue;
         }
+  
+        const newQueryObject = {
+          id: crypto.randomUUID(),
+          query,
+          hash,
+          timestamp: Date.now(),
+          tfidfVector: vector,
+          lastTimeAsked: null,
+          relatedQueries: []
+        };
+  
+        await saveQuery(newQueryObject);
+        existingQueries.push(newQueryObject);
+        existingHashes.add(hash);
+        tokenizedExisting.push(tokens);
+        await groupBySimilarity(existingQueries, newQueryObject);
+      }
+  
+      await updateLastSyncTime();
+      return existingQueries;
     } catch (error) {
-        console.error("Error fetching history entries:", error);
+      console.error("Error syncing history entries:", error);
+      return [];
     }
-}
+  }
+
+  async function getLastSyncTime() {
+    return new Promise(resolve => {
+      chrome.storage.local.get(['lastHistorySync'], result => {
+        resolve(result.lastHistorySync || 0); // fallback to epoch
+      });
+    });
+  }
+
+  async function updateLastSyncTime() {
+    const now = Date.now();
+    chrome.storage.local.set({ lastHistorySync: now });
+  }
+
+
+  function normalizeQueryForHash(query) {
+    const title = query.title.trim().toLowerCase();
+    const url = new URL(query.url);
+    url.search = ''; // Remove query params (UTM tracking, etc.)
+    return `${title}::${url.origin}${url.pathname}`;
+  }
+
+  async function hashString(str) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    return [...new Uint8Array(hashBuffer)].map(b => b.toString(16).padStart(2, '0')).join('');
+  }
   

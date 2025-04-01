@@ -28,6 +28,12 @@
     line-height: 1.4;
 }
 
+.wotd-attribution {
+    font-size: 0.8em;
+    color: #888;
+    margin-top: 4px;
+}
+
 /* Fade-in Animation */
 .wotd-loaded {
     opacity: 1 !important;

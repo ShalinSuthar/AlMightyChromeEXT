@@ -14,10 +14,14 @@
         "alarms"
     ],
     "host_permissions": [
-      "https://doa508wm14jjw.cloudfront.net/*"
+      "https://doa508wm14jjw.cloudfront.net/*",
+      "https://huggingface.co/*"
     ],
     "background": {
       "service_worker": "js/background.js"
+    },
+    "content_security_policy": {
+      "extension_pages": "script-src 'self'; object-src 'self';"
     }
   }
   

@@ -12,35 +12,34 @@ const wotdWidget = {
     },
     loadWordOfTheDay: async function() {
         try {
-            // Get a random word
-            const wordRes = await fetch('https://random-word-api.herokuapp.com/word');
-            const [word] = await wordRes.json();
-    
-            // Fetch definition for the word
-            const dictRes = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
-            const data = await dictRes.json();
-    
-            // Extract definition
-            if (data && data.length > 0) {
-                const definition = data[0].meanings[0].definitions[0].definition;
-                this.populateWordAndDefinition(word, definition);
+            const res = await fetch('https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getWordOfTheDay');
+            const data = await res.json();
+            console.log(data);
+            if (data && data.word && data.definitions && data.definitions.text) {
+                const word = data.word;
+                let definition = data.definitions.text;
+                definition = definition.replace(/<[^>]+>/g, '');
+                this.populateWordAndDefinition(word, definition, data.definitions.attributionText);
             } else {
-                this.loadWordOfTheDay(); // Retry if no definition found
+                console.warn("No valid word or definition found in backend response.");
             }
         } catch (error) {
             console.error("Error fetching word of the day:", error);
-            return null;
         }
     },
-    populateWordAndDefinition: function(word, definition) {
+    populateWordAndDefinition: function(word, definition, attributionText) {
         const wordContainer = document.getElementById("wotd-word-container");
         const definitionContainer = document.getElementById("wotd-definition-container");
         const widgetContainer = document.getElementById("wotd-widget-container");
+        const attributionContainer = document.getElementById("wotd-attribution-container");
         if (wordContainer) {
             wordContainer.innerText = word;
         }
         if (definitionContainer) {
             definitionContainer.innerText = definition;
+        }
+        if (attributionContainer && attributionText) {
+            attributionContainer.innerText = attributionText;
         }
         chrome.storage.sync.get(['wotdX', 'wotdY'], (browserData) => {
             widgetContainer.style.left = `${browserData.wotdX}px`;
