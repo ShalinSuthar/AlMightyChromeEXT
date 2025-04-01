@@ -89,27 +89,39 @@ const searchQuizWidget = {
     },
     getMostRelevantSearch: async function() {
         const allQueries = await getAllQueries();
-        /**
-         * score = length of related array + avg(strength of similarities) + (Now - lastTimeAsked)
-         */
-        let maximumScore = 0.0;
+        let maximumScore = -Infinity;
         let mostRelevantQuery = null;
+    
         for (let queryItem of allQueries) {
-            const numberRelated = queryItem.relatedQueries.length;
-            const averageStrength = queryItem.relatedQueries.reduce((sum, a) => sum + a, 0) / numberRelated;
-            const lastTimeAsked = queryItem.lastTimeAsked || Date.now();
-            const timeElapsedSinceLastAsked = Date.now() - lastTimeAsked;
-            const queryScore = numberRelated + averageStrength + timeElapsedSinceLastAsked/10000;
-            if (queryScore > maximumScore) {
-                maximumScore = queryScore;
+            const related = queryItem.relatedQueries || [];
+            const relatedCount = related.length;
+            const averageSimilarity = relatedCount === 0
+                ? 0
+                : related.reduce((sum, r) => sum + r.similarity, 0) / relatedCount;
+    
+            const popularityScore = Math.log(1 + relatedCount);
+            const similarityScore = averageSimilarity;
+    
+            const lastTimeAsked = queryItem.lastTimeAsked || 0;
+            const hoursSinceAsked = (Date.now() - lastTimeAsked) / (1000 * 60 * 60);
+            const recencyScore = 1 / (1 + Math.exp(-0.1 * (hoursSinceAsked - 24))); // sigmoid around 24h
+    
+            const score =
+                2.0 * popularityScore +
+                3.0 * similarityScore +
+                5.0 * recencyScore;
+    
+            if (score > maximumScore) {
+                maximumScore = score;
                 mostRelevantQuery = queryItem;
             }
         }
         if (!mostRelevantQuery) return null;
+    
         mostRelevantQuery.lastTimeAsked = Date.now();
         await saveQuery(mostRelevantQuery);
-        return mostRelevantQuery.query;
+        return mostRelevantQuery.query.title;
     }
-};
+};    
 
 window.searchQuizWidget = searchQuizWidget;
