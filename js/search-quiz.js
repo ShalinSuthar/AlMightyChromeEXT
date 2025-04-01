@@ -88,18 +88,27 @@ const searchQuizWidget = {
         }
     },
     getMostRelevantSearch: async function() {
-        return new Promise(resolve => {
-            const oneHourAgo = Date.now() - 1000 * 60 * 60;
-
-            chrome.history.search({ text: "", maxResults: 5, startTime: oneHourAgo }, results => {
-                const searches = results.map(entry => entry.title);
-                const learningKeywords = ["how to", "what is", "guide", "tutorial", "explain", "learning", "science", "history"];
-                const relevantSearch = searches.find(search =>
-                    learningKeywords.some(keyword => search.toLowerCase().includes(keyword))
-                ) || searches[0];
-                resolve(relevantSearch);
-            });
-        });
+        const allQueries = await getAllQueries();
+        /**
+         * score = length of related array + avg(strength of similarities) + (Now - lastTimeAsked)
+         */
+        let maximumScore = 0.0;
+        let mostRelevantQuery = null;
+        for (let queryItem of allQueries) {
+            const numberRelated = queryItem.relatedQueries.length;
+            const averageStrength = queryItem.relatedQueries.reduce((sum, a) => sum + a, 0) / numberRelated;
+            const lastTimeAsked = queryItem.lastTimeAsked || Date.now();
+            const timeElapsedSinceLastAsked = Date.now() - lastTimeAsked;
+            const queryScore = numberRelated + averageStrength + timeElapsedSinceLastAsked/10000;
+            if (queryScore > maximumScore) {
+                maximumScore = queryScore;
+                mostRelevantQuery = queryItem;
+            }
+        }
+        if (!mostRelevantQuery) return null;
+        mostRelevantQuery.lastTimeAsked = Date.now();
+        await saveQuery(mostRelevantQuery);
+        return mostRelevantQuery.query;
     }
 };
 

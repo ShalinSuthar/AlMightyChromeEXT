@@ -1,23 +1,35 @@
-import { addToJSONStructureAsync, extractQueryFromURL, isLearningRelatedSearch } from './knowledge-graph/add-to-graph.js';
+importScripts('./knowledge-graph/add-to-graph.js', './knowledge-graph/db-operations.js');
 
 chrome.runtime.onInstalled.addListener(() => {
     console.log('Extension installed!');
+    syncHistoryQueries().then(res => {
+      console.log("Synced queries:", res);
+    });
 });
 
 /**
- * On every user search, process their search and store it locally
+ * Update storage every day
  */
-chrome.webNavigation.onCompleted.addListener(async ({ url }) => {
-    const query = extractQueryFromURL(url);
-    if (isLearningRelatedSearch(query, url)) {
-        // setTimeout queues an additional event, extending the worker’s life for another cycle.
-        // not needed necessarily, but makes sure that our async events aren't killed
-        setTimeout(async () => {
-            try {
-              await addToJSONStructureAsync(query);
-            } catch (e) {
-              console.error("Failed during async store:", e);
-            }
-        }, 0);
-    }
-});
+// chrome.alarms.create('updateSearchDB', {
+//   periodInMinutes: 120 
+// });
+
+// chrome.alarms.onAlarm.addListener((alarm) => {
+//   if (alarm.name === 'updateSearchDB') {
+//     try {
+//       syncHistoryQueries();
+//     } catch (e) {
+//       console.error("Failed during async store:", e);
+//     }
+//   }
+// });
+syncHistoryQueries();
+// chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+//   if (msg === "runHistoryUpdate") {
+//     syncHistoryQueries().then(() => {
+//       sendResponse("Done");
+//     });
+//     return true; // Required to allow async sendResponse
+//   }
+// });
+

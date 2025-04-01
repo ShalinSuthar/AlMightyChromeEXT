@@ -1,5 +1,5 @@
 // db.js
-export function getDB() {
+function getDB() {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open('SearchDB', 1);
   
@@ -22,7 +22,7 @@ export function getDB() {
 }
   
 
-export async function saveQuery(queryObj) {
+async function saveQuery(queryObj) {
     const db = await getDB();
     return new Promise((resolve, reject) => {
       const tx = db.transaction('queries', 'readwrite');
@@ -40,7 +40,7 @@ export async function saveQuery(queryObj) {
     });
   }
   
-  export async function getAllQueries() {
+async function getAllQueries() {
     const db = await getDB();
     return new Promise((resolve, reject) => {
       const tx = db.transaction('queries', 'readonly');
