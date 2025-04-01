@@ -23,7 +23,7 @@ chrome.runtime.onInstalled.addListener(() => {
 //     }
 //   }
 // });
-syncHistoryQueries();
+// syncHistoryQueries();
 // chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 //   if (msg === "runHistoryUpdate") {
 //     syncHistoryQueries().then(() => {

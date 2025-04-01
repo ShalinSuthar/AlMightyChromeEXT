@@ -39,18 +39,17 @@ async function groupBySimilarity(existingQueries, queryObject) {
     let maxSimilarity = 0.0;
   
     for (const existingQuery of existingQueries) {
-      const similarityToQuery = cosineSimilarity(queryObject.tfidfVector, existingQuery.tfidfVector);
-      if (similarityToQuery > maxSimilarity) {
+      const similarityToQuery = cosineSimilarity(queryObject._vector, existingQuery._vector);
+      if ((similarityToQuery > maxSimilarity) && queryObject.hash != existingQuery.hash) {
         maxSimilarity = similarityToQuery;
         mostSimilar = existingQuery;
       }
     }
-    if (maxSimilarity >= 0.99) return;
+    console.log("MAX sim: ", maxSimilarity);
     const SIMILARITY_THRESHOLD = 0.7;
     if (maxSimilarity >= SIMILARITY_THRESHOLD && mostSimilar) {
       const similarQueryObject = { similarQuery: queryObject.id, similarity: maxSimilarity };
       mostSimilar.relatedQueries.push(similarQueryObject);
-      console.log("naughty");
       await saveQuery(mostSimilar);
     }
   }  
@@ -80,34 +79,32 @@ function extractQueryFromURL(url) {
  * @param {*} text 
  * @returns an embedding vector
  */
-async function computeSentenceEmbedding(text) {
-    try {
-      const response = await fetch("https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getQueryEmbedding", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ text: text })
-      });
+// async function computeSentenceEmbedding(text) {
+//     try {
+//       const response = await fetch("https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getQueryEmbedding", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json"
+//         },
+//         body: JSON.stringify({ text: text })
+//       });
   
-      const embedding = await response.json();
-      return embedding;
-    } catch (error) {
-        console.error("Error fetching embedding from backend:", error);
-        return [];
-    }
-}
+//       const embedding = await response.json();
+//       return embedding;
+//     } catch (error) {
+//         console.error("Error fetching embedding from backend:", error);
+//         return [];
+//     }
+// }
 
 // find similarity
 function cosineSimilarity(vecA, vecB) {
-    // if something went wrong calculating embeddings, we'll default to a low similarity
-    console.log("vecA:", vecA);
-    console.log("vecB:", vecB);
-    if (!Array.isArray(vecA) || !Array.isArray(vecB)) {
+    // if something went wrong calculating embeddings, we'll default to a low-ish similarity
+    console.log(vecA, vecB);
+    if (!Array.isArray(vecA) || !Array.isArray(vecB) || !vecA || !vecB) {
         console.warn("Invalid vectors:", vecA, vecB);
         return 0.4;
     }
-    if (!vecA || !vecB) return 0.4;
     const dotProduct = vecA.reduce((sum, a, idx) => sum + a * vecB[idx], 0);
     const magnitude = v => Math.sqrt(v.reduce((sum, a) => sum + a * a, 0));
     return dotProduct / (magnitude(vecA) * magnitude(vecB));
@@ -125,71 +122,80 @@ async function getHistoryEntries(options) {
 }
 
 async function syncHistoryQueries() {
-    const startTime = await getLastSyncTime();
-  
-    try {
+  const startTime = await getLastSyncTime();
+
+  try {
       const results = await getHistoryEntries({ text: "", maxResults: 10, startTime });
-  
       const filteredSearches = results
-        .map(entry => ({ title: entry.title, url: entry.url }))
-        .filter(search => isLearningRelatedSearch(search.title, search.url));
-  
+          .map(entry => ({ title: entry.title, url: entry.url }))
+          .filter(search => isLearningRelatedSearch(search.title, search.url));
+
       const existingQueries = await getAllQueries();
       const existingHashes = new Set(existingQueries.map(q => q.hash));
-      const tokenizedExisting = existingQueries.map(q => tokenize(q.query.title));
-      const { vocab, idf } = buildVocabAndIDF(tokenizedExisting);
-  
-      for (const query of filteredSearches) {
 
-        const tokens = tokenize(query.title);
-        const vector = tfidfVector(tokens, vocab, idf);
-        const hash = await hashString(normalizeQueryForHash(query));
-        console.log(existingHashes);
-        if (existingHashes.has(hash)) {
-            console.log("Ignoring duplicate:", query.title);
-            continue;
-        }
-  
-        const newQueryObject = {
-          id: crypto.randomUUID(),
-          query,
-          hash,
-          timestamp: Date.now(),
-          tfidfVector: vector,
-          lastTimeAsked: null,
-          relatedQueries: []
-        };
-  
-        await saveQuery(newQueryObject);
-        existingQueries.push(newQueryObject);
-        existingHashes.add(hash);
-        tokenizedExisting.push(tokens);
-        await groupBySimilarity(existingQueries, newQueryObject);
+      const newQueries = [];
+
+      for (const search of filteredSearches) {
+          const hash = await hashString(normalizeQueryForHash(search));
+          if (existingHashes.has(hash)) {
+              console.log("Ignoring duplicate:", search.title);
+              continue;
+          }
+
+          const newQuery = {
+              id: crypto.randomUUID(),
+              query: search,
+              hash,
+              timestamp: Date.now(),
+              lastTimeAsked: null,
+              relatedQueries: []
+          };
+
+          newQueries.push(newQuery);
+          existingQueries.push(newQuery);
+          existingHashes.add(hash);
       }
-  
+
+      // Rebuild vocab + IDF from all query tokens
+      const allTokenized = existingQueries.map(q => tokenize(q.query.title));
+      const { vocab, idf } = buildVocabAndIDF(allTokenized);
+
+      // Recompute all vectors
+      const allVectors = allTokenized.map(tokens => tfidfVector(tokens, vocab, idf));
+      existingQueries.forEach((q, i) => q._vector = allVectors[i]); // _vector is temporary, not saved
+
+      // Group and save only new queries
+      for (const newQuery of newQueries) {
+          await groupBySimilarity(existingQueries, newQuery);
+          await saveQuery(newQuery); // Save metadata only
+      }
+
       await updateLastSyncTime();
       return existingQueries;
-    } catch (error) {
+
+  } catch (error) {
       console.error("Error syncing history entries:", error);
       return [];
-    }
   }
+}
 
-  async function getLastSyncTime() {
+
+async function getLastSyncTime() {
+    const TWO_DAYS_AGO = Date.now() - 2 * 24 * 60 * 60 * 1000;
     return new Promise(resolve => {
       chrome.storage.local.get(['lastHistorySync'], result => {
-        resolve(result.lastHistorySync || 0); // fallback to epoch
+        resolve(result.lastHistorySync || TWO_DAYS_AGO); // fallback to two days ago
       });
     });
   }
 
-  async function updateLastSyncTime() {
+async function updateLastSyncTime() {
     const now = Date.now();
     chrome.storage.local.set({ lastHistorySync: now });
   }
 
 
-  function normalizeQueryForHash(query) {
+function normalizeQueryForHash(query) {
     const title = query.title.trim().toLowerCase();
     const url = new URL(query.url);
     url.search = ''; // Remove query params (UTM tracking, etc.)
