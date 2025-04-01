@@ -10,18 +10,43 @@ const triviaWidget = {
             widgetElement.style.display = "none";
         }
     },
+    mapScoreToDifficulty: function(score) {
+        if (score <= 30) return "easy";
+        if (score <= 60) return "medium";
+        if (score <= 100) return "hard";
+        if (score <= 150) return "challenging";
+        if (score <= 200) return "preposterous";
+        if (score <= 250) return "impossible";
+        if (score <= 300) return "genius";
+        return "easy";
+    },
     loadAndDisplayTriviaQuestion: function() {
-        // Fetch user theme preference from the browser
         chrome.storage.sync.get(['triviaScore', 'triviaX', 'triviaY'], (browserData) => {
-            let triviaScore = browserData.triviaScore || 0;
-
-            // Fetch trivia from our backend API with one query param: user's current trivia score
-            fetch(`https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/trivia?score=${triviaScore}`)
-            .then(response => response.json())
-            .then(apiData => {
-                this.displayTriviaQuestion(apiData, browserData, triviaScore);
-            })
-            .catch(error => console.error('Error fetching trivia:', error));
+            const triviaScore = browserData.triviaScore || 0;
+            const difficulty = this.mapScoreToDifficulty(triviaScore);
+    
+            fetch('https://doa508wm14jjw.cloudfront.net/trivia.json')
+                .then(response => response.json())
+                .then(allTrivia => {
+                    let filteredTrivia = difficulty
+                        ? allTrivia.filter(t => t.difficulty.toLowerCase() === difficulty.toLowerCase())
+                        : allTrivia;
+    
+                    if (filteredTrivia.length === 0) {
+                        console.warn(`No trivia found for difficulty: ${difficulty}, falling back to "easy"`);
+                        filteredTrivia = allTrivia.filter(t => t.difficulty.toLowerCase() === "easy");
+                    }
+    
+                    const randomQuestion = filteredTrivia[Math.floor(Math.random() * filteredTrivia.length)];
+                    this.displayTriviaQuestion(randomQuestion, browserData, triviaScore);
+                })
+                .catch(error => {
+                    console.error('Error fetching trivia:', error);
+                    const container = document.getElementById('trivia-options-container');
+                    if (container) {
+                        container.innerHTML = "<p>Unable to load trivia. Try again later.</p>";
+                    }
+                });
         });
     },
     displayTriviaQuestion: function(apiData, browserData, triviaScore) {
