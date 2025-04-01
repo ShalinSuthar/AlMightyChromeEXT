@@ -14,7 +14,6 @@ const wotdWidget = {
         try {
             const res = await fetch('https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getWordOfTheDay');
             const data = await res.json();
-            console.log(data);
             if (data && data.word && data.definitions && data.definitions.text) {
                 const word = data.word;
                 let definition = data.definitions.text;
