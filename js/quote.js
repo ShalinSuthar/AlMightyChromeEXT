@@ -34,9 +34,6 @@ const quoteWidget = {
 
       chrome.storage.sync.get(indexKey, (indexData) => {
         let index = indexData[indexKey] || 0;
-        // this is a possibility for us (i.e., using CDN). The only issue here is we're exposing our s3 bucket data, which
-        // might defeat the purpose of our "curation" strategy. Anyone can replicate our content in this case.
-        // Latency for this call is 1ms though, which is WAY faster than before (200-400ms) with Lambda.
           fetch(`https://doa508wm14jjw.cloudfront.net/${selectedTheme}_quotes.json`)
           .then(response =>response.json())
           .then(quotes => {
