@@ -15,31 +15,43 @@ const searchQuizWidget = {
         const questionElement = document.getElementById('search-quiz-question');
         const searchQuizInput = document.getElementById('search-quiz-input');
         const submitButton = document.getElementById("search-quiz-submit-button");
-
+        // display the widget
         if (!widgetElement) return;
+
+        chrome.storage.sync.get(['searchX', 'searchY'], (browserData) => {
+            widgetElement.style.left = `${browserData.searchX}px`;
+            widgetElement.style.top = `${browserData.searchY}px`;
+            widgetElement.style.display = "block";
+        });
+
+        questionElement.innerHTML = `
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text skeleton-short"></div>
+        `;
         
         this.fetchSearchQuizQuestion().then(quiz => {
             if (!quiz) {
+                questionElement.innerHTML = '';
                 widgetElement.innerText = "No quiz available.";
                 return;
             }
             
             // Display question
+            questionElement.innerHTML = '';
             questionElement.innerText = quiz.question;
 
             // Reset input and feedback
             searchQuizInput.value = "";
 
             submitButton.onclick = () => this.submitAnswerAndReceiveFeedback(quiz.question, searchQuizInput.value.trim());
-            // display the widget
-            widgetElement.style.display = "block";
         });
     },
     submitAnswerAndReceiveFeedback: async function(question, userAnswer) {
         if (!userAnswer) { return; }
 
         const feedbackElement = document.getElementById('search-quiz-feedback');
-        feedbackElement.innerText = "Evaluating...";
+        //feedbackElement.innerText = "Evaluating...";
+        feedbackElement.innerHTML = `<div class="skeleton skeleton-text skeleton-short"></div>`;
         if (!question || !userAnswer) {
             console.error("Missing question or userAnswer. Aborting request.");
             return;
@@ -55,6 +67,7 @@ const searchQuizWidget = {
             });
 
             if (!response.ok) {
+                feedbackElement.innerHTML = '';
                 feedbackElement.innerText = "Error evaluating answer.";
                 return;
             }

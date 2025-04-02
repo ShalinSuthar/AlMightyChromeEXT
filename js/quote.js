@@ -26,7 +26,14 @@ const quoteWidget = {
   },
   loadAndDisplayQuote: function () {
     const quoteContainer = document.getElementById("quote-text");
+    const widgetElement = document.getElementById("quote-container");
+
     quoteContainer.textContent = "";
+
+    chrome.storage.sync.get(['quoteX', 'quoteY'], (browserData) => {
+      widgetElement.style.left = `${browserData.quoteX}px`;
+      widgetElement.style.top = `${browserData.quoteY}px`;
+    });
     // fetch user theme preference
     chrome.storage.sync.get('preferredTheme', (data) => {
       let selectedTheme = data.preferredTheme || 'default';
