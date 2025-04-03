@@ -10,22 +10,45 @@ const wotdWidget = {
             wotdElement.style.display = "none";
         }
     },
-    loadWordOfTheDay: async function() {
-        try {
-            const res = await fetch('https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getWordOfTheDay');
-            const data = await res.json();
-            if (data && data.word && data.definitions && data.definitions.text) {
-                const word = data.word;
-                let definition = data.definitions.text;
-                definition = definition.replace(/<[^>]+>/g, '');
-                this.populateWordAndDefinition(word, definition, data.definitions.attributionText);
+    loadWordOfTheDay: async function () {
+        const CACHE_LIMIT = 3;
+    
+        chrome.storage.sync.get(['cachedWotd', 'cachedDefinition', 'cachedAttribution', 'cachedWotdViews'], async (data) => {
+            let { cachedWotd, cachedDefinition, cachedAttribution, cachedWotdViews } = data;
+    
+            if (cachedWotd && cachedDefinition && cachedWotdViews < CACHE_LIMIT) {
+                // Use cached word
+                chrome.storage.sync.set({ cachedWotdViews: cachedWotdViews + 1 });
+                this.populateWordAndDefinition(cachedWotd, cachedDefinition, cachedAttribution);
             } else {
-                console.warn("No valid word or definition found in backend response.");
+                // Fetch new word
+                try {
+                    const res = await fetch('https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getWordOfTheDay');
+                    const apiData = await res.json();
+    
+                    if (apiData && apiData.word && apiData.definitions && apiData.definitions.text) {
+                        const word = apiData.word;
+                        let definition = apiData.definitions.text.replace(/<[^>]+>/g, '');
+                        const attribution = apiData.definitions.attributionText || '';
+    
+                        // Cache new word
+                        chrome.storage.sync.set({
+                            cachedWotd: word,
+                            cachedDefinition: definition,
+                            cachedAttribution: attribution,
+                            cachedWotdViews: 1
+                        });
+    
+                        this.populateWordAndDefinition(word, definition, attribution);
+                    } else {
+                        console.warn("No valid word or definition found in backend response.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching word of the day:", error);
+                }
             }
-        } catch (error) {
-            console.error("Error fetching word of the day:", error);
-        }
-    },
+        });
+    },    
     populateWordAndDefinition: function(word, definition, attributionText) {
         const wordContainer = document.getElementById("wotd-word-container");
         const definitionContainer = document.getElementById("wotd-definition-container");
