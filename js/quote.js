@@ -66,7 +66,7 @@ const quoteWidget = {
           widgetElement.classList.add(randomQuote.theme ?? randomTheme);
 
           // **Typewriter effect**
-          typeWriterEffect(randomQuote.text, quoteContainer);
+          // typeWriterEffect(randomQuote.text, quoteContainer);
 
           // **Update index in storage**
           let nextIndex = (index + 1) % filteredQuotes.length;
