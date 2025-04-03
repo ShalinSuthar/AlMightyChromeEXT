@@ -40,7 +40,7 @@ const wotdWidget = {
                             cachedWotdViews: 1
                         });
     
-                        this.populateWordAndDefinition(word, definition, attribution, usingCachedWord);
+                        this.populateWordAndDefinition(word, definition, attribution, false);
                     } else {
                         console.warn("No valid word or definition found in backend response.");
                     }
@@ -72,7 +72,7 @@ const wotdWidget = {
         if (!usingCachedWord) {
             widgetContainer.classList.add("wotd-loaded");
         } else {
-            widgetContainer.classList.remove("wotd-loaded"); // skip fade-in if cached
+            widgetContainer.style.transition = "none"; // skip fade in
             widgetContainer.style.opacity = "1"; // show immediately
         }
     }
