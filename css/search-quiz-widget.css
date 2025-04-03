@@ -1,58 +1,64 @@
-/* Container styling */
+/* Terminal-style container */
 #search-quiz-container {
-  width: 300px;
-  background-color: #ffffff;
-  border: 1px solid #ddd;
+  width: 320px;
+  background-color: #000; /* black terminal bg */
+  border: 1px solid #0f0; /* neon green border */
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  padding: 10px 20px 20px 20px; /* top right bottom left */
   position: absolute;
   top: 20px;
   left: 20px;
-  font-family: Arial, sans-serif;
+  font-family: 'Courier New', Courier, monospace; /* terminal font */
+  color: #0f0;
 }
 
-/* Input container styling */
 #search-quiz-input-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-/* Question styling */
 #search-quiz-question {
-  font-size: 18px;
-  color: #333;
-  margin-bottom: 10px;
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 
-/* Text input styling */
+/* Terminal-style textarea input */
 #search-quiz-input {
   width: 100%;
-  height: 40px;
+  min-height: 40px;
   padding: 8px;
   font-size: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid #0f0;
   border-radius: 4px;
+  background-color: #000;
+  color: #0f0;
+  resize: none;
   outline: none;
-  background-color: #fff;
-  color: #000;
+  box-sizing: border-box;
+  width: 100%;
 }
 
-/* Submit button styling */
+/* Terminal-style submit button */
 #search-quiz-submit-button {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
+  background-color: transparent;
+  color: #0f0;
+  border: 1px solid #0f0;
   padding: 10px;
   font-size: 16px;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  font-family: 'Courier New', Courier, monospace;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 #search-quiz-submit-button:hover {
-  background-color: #0056b3;
+  background-color: #0f0;
+  color: #000;
 }
 
 /* Feedback styling */
@@ -60,11 +66,11 @@
   margin-top: 10px;
   font-size: 14px;
   font-weight: bold;
-  color: #333;
+  color: #0f0;
 }
 
 .skeleton {
-  background-color: #e0e0e0;
+  background-color: #222;
   border-radius: 4px;
   animation: pulse 1.5s infinite ease-in-out;
 }
@@ -81,7 +87,6 @@
 
 @keyframes pulse {
   0% { opacity: 1; }
-  50% { opacity: 0.4; }
+  50% { opacity: 0.3; }
   100% { opacity: 1; }
 }
-

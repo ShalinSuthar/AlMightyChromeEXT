@@ -45,8 +45,7 @@ async function groupBySimilarity(existingQueries, queryObject) {
         mostSimilar = existingQuery;
       }
     }
-    console.log("MAX sim: ", maxSimilarity);
-    const SIMILARITY_THRESHOLD = 0.7;
+    const SIMILARITY_THRESHOLD = 0.5;
     if (maxSimilarity >= SIMILARITY_THRESHOLD && mostSimilar) {
       const similarQueryObject = { similarQuery: queryObject.id, similarity: maxSimilarity };
       mostSimilar.relatedQueries.push(similarQueryObject);
@@ -102,7 +101,6 @@ function cosineSimilarity(vecA, vecB) {
     // if something went wrong calculating embeddings, we'll default to a low-ish similarity
     console.log(vecA, vecB);
     if (!Array.isArray(vecA) || !Array.isArray(vecB) || !vecA || !vecB) {
-        console.warn("Invalid vectors:", vecA, vecB);
         return 0.4;
     }
     const dotProduct = vecA.reduce((sum, a, idx) => sum + a * vecB[idx], 0);
@@ -138,7 +136,6 @@ async function syncHistoryQueries() {
       for (const search of filteredSearches) {
           const hash = await hashString(normalizeQueryForHash(search));
           if (existingHashes.has(hash)) {
-              console.log("Ignoring duplicate:", search.title);
               continue;
           }
 

@@ -1,6 +1,6 @@
 const searchQuizWidget = {
     id: "search-quiz",
-    name: "Search Quiz",
+    name: "Search History Quiz",
     render: function() {
         this.displaySearchQuizQuestion();
     },
@@ -29,22 +29,35 @@ const searchQuizWidget = {
             <div class="skeleton skeleton-text skeleton-short"></div>
         `;
         
-        this.fetchSearchQuizQuestion().then(quiz => {
-            if (!quiz) {
-                questionElement.innerHTML = '';
-                widgetElement.innerText = "No quiz available.";
-                return;
+        chrome.storage.sync.get(['cachedQuiz', 'cachedQuizCount'], (data) => {
+            const count = data.cachedQuizCount || 0;
+            const cached = data.cachedQuiz;
+        
+            if (cached && count < 5) {
+                chrome.storage.sync.set({ cachedQuizCount: count + 1 });
+                this.displayQuiz(cached);
+            } else {
+                this.fetchSearchQuizQuestion().then(quiz => {
+                    if (!quiz) {
+                        questionElement.innerHTML = '';
+                        widgetElement.innerText = "No quiz available.";
+                        return;
+                    }
+                    chrome.storage.sync.set({ cachedQuiz: quiz, cachedQuizCount: 1 });
+                    this.displayQuiz(quiz);
+                });
             }
-            
-            // Display question
-            questionElement.innerHTML = '';
-            questionElement.innerText = quiz.question;
-
-            // Reset input and feedback
-            searchQuizInput.value = "";
-
-            submitButton.onclick = () => this.submitAnswerAndReceiveFeedback(quiz.question, searchQuizInput.value.trim());
         });
+    },
+    displayQuiz: function(quiz) {
+        const questionElement = document.getElementById('search-quiz-question');
+        const searchQuizInput = document.getElementById('search-quiz-input');
+        const submitButton = document.getElementById("search-quiz-submit-button");
+    
+        questionElement.innerHTML = '';
+        questionElement.innerText = quiz.question;
+        searchQuizInput.value = "";
+        submitButton.onclick = () => this.submitAnswerAndReceiveFeedback(quiz.question, searchQuizInput.value.trim());
     },
     submitAnswerAndReceiveFeedback: async function(question, userAnswer) {
         if (!userAnswer) { return; }
@@ -73,7 +86,7 @@ const searchQuizWidget = {
             }
 
             const data = await response.json();
-            feedbackElement.innerText = data.feedback;
+            feedbackElement.innerText = "> " + data.feedback;
         } catch (error) {
             console.error("Error fetching feedback:", error);
             feedbackElement.innerText = "Error fetching feedback.";
@@ -104,6 +117,7 @@ const searchQuizWidget = {
         const allQueries = await getAllQueries();
         let maximumScore = -Infinity;
         let mostRelevantQuery = null;
+        let relatedQueryId = null;
     
         for (let queryItem of allQueries) {
             const related = queryItem.relatedQueries || [];
@@ -118,22 +132,27 @@ const searchQuizWidget = {
             const lastTimeAsked = queryItem.lastTimeAsked || 0;
             const hoursSinceAsked = (Date.now() - lastTimeAsked) / (1000 * 60 * 60);
             const recencyScore = 1 / (1 + Math.exp(-0.1 * (hoursSinceAsked - 24))); // sigmoid around 24h
-    
             const score =
-                2.0 * popularityScore +
+                1.5 * popularityScore +
                 3.0 * similarityScore +
-                5.0 * recencyScore;
-    
+                6.5 * recencyScore;
             if (score > maximumScore) {
                 maximumScore = score;
                 mostRelevantQuery = queryItem;
+                if (relatedCount > 0) relatedQueryId = mostRelevantQuery.relatedQueries[0].similarQuery;
             }
         }
         if (!mostRelevantQuery) return null;
-    
+
         mostRelevantQuery.lastTimeAsked = Date.now();
         await saveQuery(mostRelevantQuery);
-        return mostRelevantQuery.query.title;
+        let appendRelatedQuery  = '';
+        // lets append two queries together if they're somewhat similar
+        if (relatedQueryId) {
+            const relatedQueryObj = await getQueryById(relatedQueryId);
+            appendRelatedQuery += " " + relatedQueryObj.query.title;
+        }
+        return mostRelevantQuery.query.title + appendRelatedQuery;
     }
 };    
 
