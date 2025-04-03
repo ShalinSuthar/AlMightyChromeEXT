@@ -1,6 +1,6 @@
 const searchQuizWidget = {
     id: "search-quiz",
-    name: "Search Quiz",
+    name: "Search History Quiz",
     render: function() {
         this.displaySearchQuizQuestion();
     },
@@ -29,22 +29,35 @@ const searchQuizWidget = {
             <div class="skeleton skeleton-text skeleton-short"></div>
         `;
         
-        this.fetchSearchQuizQuestion().then(quiz => {
-            if (!quiz) {
-                questionElement.innerHTML = '';
-                widgetElement.innerText = "No quiz available.";
-                return;
+        chrome.storage.sync.get(['cachedQuiz', 'cachedQuizCount'], (data) => {
+            const count = data.cachedQuizCount || 0;
+            const cached = data.cachedQuiz;
+        
+            if (cached && count < 3) {
+                chrome.storage.sync.set({ cachedQuizCount: count + 1 });
+                this.displayQuiz(cached);
+            } else {
+                this.fetchSearchQuizQuestion().then(quiz => {
+                    if (!quiz) {
+                        questionElement.innerHTML = '';
+                        widgetElement.innerText = "No quiz available.";
+                        return;
+                    }
+                    chrome.storage.sync.set({ cachedQuiz: quiz, cachedQuizCount: 1 });
+                    this.displayQuiz(quiz);
+                });
             }
-            
-            // Display question
-            questionElement.innerHTML = '';
-            questionElement.innerText = quiz.question;
-
-            // Reset input and feedback
-            searchQuizInput.value = "";
-
-            submitButton.onclick = () => this.submitAnswerAndReceiveFeedback(quiz.question, searchQuizInput.value.trim());
         });
+    },
+    displayQuiz: function(quiz) {
+        const questionElement = document.getElementById('search-quiz-question');
+        const searchQuizInput = document.getElementById('search-quiz-input');
+        const submitButton = document.getElementById("search-quiz-submit-button");
+    
+        questionElement.innerHTML = '';
+        questionElement.innerText = quiz.question;
+        searchQuizInput.value = "";
+        submitButton.onclick = () => this.submitAnswerAndReceiveFeedback(quiz.question, searchQuizInput.value.trim());
     },
     submitAnswerAndReceiveFeedback: async function(question, userAnswer) {
         if (!userAnswer) { return; }
@@ -73,7 +86,7 @@ const searchQuizWidget = {
             }
 
             const data = await response.json();
-            feedbackElement.innerText = data.feedback;
+            feedbackElement.innerText = "> " + data.feedback;
         } catch (error) {
             console.error("Error fetching feedback:", error);
             feedbackElement.innerText = "Error fetching feedback.";

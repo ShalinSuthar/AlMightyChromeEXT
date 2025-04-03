@@ -1,6 +1,6 @@
 const wotdWidget = {
     id: "wotd",
-    name: "Word Of The Day",
+    name: "Words",
     render: function() {
         this.loadWordOfTheDay();
     },
@@ -15,11 +15,12 @@ const wotdWidget = {
     
         chrome.storage.sync.get(['cachedWotd', 'cachedDefinition', 'cachedAttribution', 'cachedWotdViews'], async (data) => {
             let { cachedWotd, cachedDefinition, cachedAttribution, cachedWotdViews } = data;
-    
-            if (cachedWotd && cachedDefinition && cachedWotdViews < CACHE_LIMIT) {
+            
+            const usingCachedWord = cachedWotd && cachedDefinition && cachedWotdViews < CACHE_LIMIT;
+            if (usingCachedWord) {
                 // Use cached word
                 chrome.storage.sync.set({ cachedWotdViews: cachedWotdViews + 1 });
-                this.populateWordAndDefinition(cachedWotd, cachedDefinition, cachedAttribution);
+                this.populateWordAndDefinition(cachedWotd, cachedDefinition, cachedAttribution, usingCachedWord);
             } else {
                 // Fetch new word
                 try {
@@ -39,7 +40,7 @@ const wotdWidget = {
                             cachedWotdViews: 1
                         });
     
-                        this.populateWordAndDefinition(word, definition, attribution);
+                        this.populateWordAndDefinition(word, definition, attribution, usingCachedWord);
                     } else {
                         console.warn("No valid word or definition found in backend response.");
                     }
@@ -49,7 +50,7 @@ const wotdWidget = {
             }
         });
     },    
-    populateWordAndDefinition: function(word, definition, attributionText) {
+    populateWordAndDefinition: function(word, definition, attributionText, usingCachedWord) {
         const wordContainer = document.getElementById("wotd-word-container");
         const definitionContainer = document.getElementById("wotd-definition-container");
         const widgetContainer = document.getElementById("wotd-widget-container");
@@ -68,7 +69,12 @@ const wotdWidget = {
             widgetContainer.style.top = `${browserData.wotdY}px`;
         });
         widgetContainer.style.display = "block";
-        widgetContainer.classList.add("wotd-loaded");
+        if (!usingCachedWord) {
+            widgetContainer.classList.add("wotd-loaded");
+        } else {
+            widgetContainer.classList.remove("wotd-loaded"); // skip fade-in if cached
+            widgetContainer.style.opacity = "1"; // show immediately
+        }
     }
 };
 
