@@ -11,7 +11,7 @@ const wotdWidget = {
         }
     },
     loadWordOfTheDay: async function () {
-        const CACHE_LIMIT = 3;
+        const CACHE_LIMIT = 5;
     
         chrome.storage.sync.get(['cachedWotd', 'cachedDefinition', 'cachedAttribution', 'cachedWotdViews'], async (data) => {
             let { cachedWotd, cachedDefinition, cachedAttribution, cachedWotdViews } = data;

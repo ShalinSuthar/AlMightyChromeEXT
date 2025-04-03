@@ -33,7 +33,7 @@ const searchQuizWidget = {
             const count = data.cachedQuizCount || 0;
             const cached = data.cachedQuiz;
         
-            if (cached && count < 3) {
+            if (cached && count < 5) {
                 chrome.storage.sync.set({ cachedQuizCount: count + 1 });
                 this.displayQuiz(cached);
             } else {
