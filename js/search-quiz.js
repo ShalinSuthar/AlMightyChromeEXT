@@ -117,6 +117,7 @@ const searchQuizWidget = {
         const allQueries = await getAllQueries();
         let maximumScore = -Infinity;
         let mostRelevantQuery = null;
+        let relatedQueryId = null;
     
         for (let queryItem of allQueries) {
             const related = queryItem.relatedQueries || [];
@@ -131,22 +132,27 @@ const searchQuizWidget = {
             const lastTimeAsked = queryItem.lastTimeAsked || 0;
             const hoursSinceAsked = (Date.now() - lastTimeAsked) / (1000 * 60 * 60);
             const recencyScore = 1 / (1 + Math.exp(-0.1 * (hoursSinceAsked - 24))); // sigmoid around 24h
-    
             const score =
-                2.0 * popularityScore +
+                1.5 * popularityScore +
                 3.0 * similarityScore +
-                5.0 * recencyScore;
-    
+                6.5 * recencyScore;
             if (score > maximumScore) {
                 maximumScore = score;
                 mostRelevantQuery = queryItem;
+                if (relatedCount > 0) relatedQueryId = mostRelevantQuery.relatedQueries[0].similarQuery;
             }
         }
         if (!mostRelevantQuery) return null;
-    
+
         mostRelevantQuery.lastTimeAsked = Date.now();
         await saveQuery(mostRelevantQuery);
-        return mostRelevantQuery.query.title;
+        let appendRelatedQuery  = '';
+        // lets append two queries together if they're somewhat similar
+        if (relatedQueryId) {
+            const relatedQueryObj = await getQueryById(relatedQueryId);
+            appendRelatedQuery += " " + relatedQueryObj.query.title;
+        }
+        return mostRelevantQuery.query.title + appendRelatedQuery;
     }
 };    
 

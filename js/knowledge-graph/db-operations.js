@@ -56,4 +56,22 @@ async function getAllQueries() {
         reject(request.error);
       };
     });
-  }  
+  }
+
+async function getQueryById(id) {
+  const db = await getDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('queries', 'readonly');
+    const store = tx.objectStore('queries');
+    const request = store.get(id);
+
+    request.onsuccess = () => {
+      resolve(request.result || null); // null if not found
+    };
+
+    request.onerror = () => {
+      console.error("Failed to get query by ID:", request.error);
+      reject(request.error);
+    };
+  });
+}

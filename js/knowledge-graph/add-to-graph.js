@@ -45,7 +45,7 @@ async function groupBySimilarity(existingQueries, queryObject) {
         mostSimilar = existingQuery;
       }
     }
-    const SIMILARITY_THRESHOLD = 0.7;
+    const SIMILARITY_THRESHOLD = 0.5;
     if (maxSimilarity >= SIMILARITY_THRESHOLD && mostSimilar) {
       const similarQueryObject = { similarQuery: queryObject.id, similarity: maxSimilarity };
       mostSimilar.relatedQueries.push(similarQueryObject);
