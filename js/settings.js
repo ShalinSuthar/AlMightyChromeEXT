@@ -4,29 +4,25 @@ document.addEventListener("DOMContentLoaded", () => {
     const widgetList = document.getElementById("widget-list");
     const iamSelector = document.getElementById("iamSelector");
     const addShortcutBtn = document.getElementById("addShortcutBtn");
-
     const infoButton = document.getElementById("info-button");
     const infoPopup = document.getElementById("info-popup");
 
+    let currentProfile = "default"; // fallback
+
     infoButton.addEventListener("click", (event) => {
         event.stopPropagation();
-
-        if (infoPopup.classList.contains("hidden")) {
-            infoPopup.classList.remove("hidden");
-        }
+        infoPopup.classList.toggle("hidden");
         infoPopup.classList.toggle("show");
     });
-
 
     document.addEventListener("click", (event) => {
         if (!infoButton.contains(event.target) && !infoPopup.contains(event.target)) {
             infoPopup.classList.remove("show");
-
-            if (!infoPopup.classList.contains("show")) {
-                infoPopup.classList.add("hidden");
-            }
+            infoPopup.classList.add("hidden");
         }
     });
+
+    // --- Widget settings toggle ---
     settingsBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         widgetSettings.classList.toggle("show");
@@ -38,67 +34,77 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Load saved widget preferences
-    chrome.storage.sync.get(["enabledWidgets", "firstTimeInstall"], (data) => {
-        let enabledWidgets = data.enabledWidgets;
-        let firstTime = data.firstTimeInstall;
-
-        if (firstTime === undefined) {
-            // First-time install: Enable all widgets
-            enabledWidgets = widgets.map(widget => widget.id);
-            chrome.storage.sync.set({ enabledWidgets, firstTimeInstall: false });
-        }
-
-        widgets.forEach(widget => {
-            const widgetItem = document.createElement("div");
-            widgetItem.className = "widget-item";
-
-            const label = document.createElement("label");
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.checked = enabledWidgets.includes(widget.id);
-
-            const text = document.createTextNode(widget.name);
-
-            checkbox.addEventListener("change", () => {
-                chrome.storage.sync.get("enabledWidgets", (data) => {
-                    let updatedWidgets = data.enabledWidgets || [];
-
-                    if (checkbox.checked) {
-                        if (!updatedWidgets.includes(widget.id)) {
-                            updatedWidgets.push(widget.id);
-                        }
-                    } else {
-                        updatedWidgets = updatedWidgets.filter(id => id !== widget.id);
-                    }
-
-                    chrome.storage.sync.set({ enabledWidgets: updatedWidgets }, () => {
-                        updateWidgets();
-                        toggleWidgetVisibility();
-                    });
-                });
-            });
-
-            label.appendChild(checkbox);
-            label.appendChild(text);
-            widgetItem.appendChild(label);
-            widgetList.appendChild(widgetItem);
-        });
-
-        toggleWidgetVisibility();
+    // --- Get current profile and load widgets ---
+    chrome.storage.sync.get(["currentProfile"], (res) => {
+        currentProfile = res.currentProfile || "default";
+        loadWidgetsForProfile(currentProfile);
     });
 
+    function loadWidgetsForProfile(profileName) {
+        const widgetKey = `enabledWidgets_${profileName}`;
 
-    function updateWidgets() {
-        chrome.storage.sync.get("enabledWidgets", (data) => {
-            const enabledWidgets = data.enabledWidgets || [];
-            toggleWidgetVisibility();
+        chrome.storage.sync.get([widgetKey], (data) => {
+            let enabledWidgets = data[widgetKey];
+
+            // First time default
+            if (!enabledWidgets) {
+                enabledWidgets = widgets.map(widget => widget.id);
+                chrome.storage.sync.set({ [widgetKey]: enabledWidgets });
+            }
+
+            // Render widget checkboxes
+            widgetList.innerHTML = "";
+
+            widgets.forEach(widget => {
+                const widgetItem = document.createElement("div");
+                widgetItem.className = "widget-item";
+
+                const label = document.createElement("label");
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = enabledWidgets.includes(widget.id);
+
+                const text = document.createTextNode(widget.name);
+
+                checkbox.addEventListener("change", () => {
+                    handleWidgetToggle(widget.id, checkbox.checked, profileName);
+                });
+
+                label.appendChild(checkbox);
+                label.appendChild(text);
+                widgetItem.appendChild(label);
+                widgetList.appendChild(widgetItem);
+            });
+
+            updateWidgets(profileName);
+        });
+    }
+
+    function handleWidgetToggle(widgetId, isChecked, profileName) {
+        const widgetKey = `enabledWidgets_${profileName}`;
+        chrome.storage.sync.get(widgetKey, (data) => {
+            let updatedWidgets = data[widgetKey] || [];
+
+            if (isChecked && !updatedWidgets.includes(widgetId)) {
+                updatedWidgets.push(widgetId);
+            } else if (!isChecked) {
+                updatedWidgets = updatedWidgets.filter(id => id !== widgetId);
+            }
+
+            chrome.storage.sync.set({ [widgetKey]: updatedWidgets }, () => {
+                updateWidgets(profileName);
+            });
+        });
+    }
+
+    function updateWidgets(profileName) {
+        const widgetKey = `enabledWidgets_${profileName}`;
+        chrome.storage.sync.get(widgetKey, (data) => {
+            const enabledWidgets = data[widgetKey] || [];
 
             widgets.forEach(widget => {
                 const widgetElement = document.getElementById(`${widget.id}-container`);
-
                 if (enabledWidgets.includes(widget.id)) {
-                    // Only call render widget if thew idget is not already selected
                     if (!widgetElement || widgetElement.style.display === "none") {
                         widget.render();
                     }
@@ -110,28 +116,55 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                 }
             });
+
+            toggleWidgetVisibility(enabledWidgets);
         });
     }
 
-    function toggleWidgetVisibility() {
-        chrome.storage.sync.get("enabledWidgets", (data) => {
-            const enabledWidgets = data.enabledWidgets || [];
-
-
-            if (enabledWidgets.includes("quote")) {
-                iamSelector.style.display = "block";
-            } else {
-                iamSelector.style.display = "none";
-            }
-
-            if (enabledWidgets.includes("shortcuts")) {
-                addShortcutBtn.style.display = "block";
-            } else {
-                addShortcutBtn.style.display = "none";
-            }
-        });
+    function toggleWidgetVisibility(enabledWidgets) {
+        iamSelector.style.display = enabledWidgets.includes("quote") ? "block" : "none";
+        addShortcutBtn.style.display = enabledWidgets.includes("shortcuts") ? "block" : "none";
     }
 
-    // Ensure correct display of widgets if settings change
-    document.getElementById("widget-list").addEventListener("change", toggleWidgetVisibility);
+    // Auto toggle extras when widget state changes
+    widgetList.addEventListener("change", () => {
+        const widgetKey = `enabledWidgets_${currentProfile}`;
+        chrome.storage.sync.get(widgetKey, (data) => {
+            toggleWidgetVisibility(data[widgetKey] || []);
+        });
+    });
+
+    window.switchProfile = function (newProfileName) {
+        chrome.storage.sync.set({ currentProfile: newProfileName }, () => {
+            currentProfile = newProfileName;
+            loadWidgetsForProfile(currentProfile);
+        });
+    };
+
+    const profileDropdown = document.getElementById("profileDropdown");
+const profileToast = document.getElementById("profile-toast");
+
+// Load dropdown with last selected profile
+chrome.storage.sync.get(["currentProfile"], (res) => {
+    const saved = res.currentProfile || "default";
+    profileDropdown.value = saved;
+});
+
+
+profileDropdown.addEventListener("change", (e) => {
+    const selected = e.target.value;
+    switchProfile(selected);
+    showToast("Switched to " + selected);
+});
+
+
+function showToast(message) {
+    profileToast.textContent = message;
+    profileToast.classList.add("show");
+
+    setTimeout(() => {
+        profileToast.classList.remove("show");
+    }, 2000);
+}
+
 });

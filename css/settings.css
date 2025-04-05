@@ -101,3 +101,21 @@
     margin: 0;
     cursor: pointer;
 }
+
+.toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #444;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+  }
+  
+  .toast.show {
+    opacity: 1;
+  }
+  
