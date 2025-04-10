@@ -1,10 +1,83 @@
 // filter to avoid storing irrelevant searches
 function isLearningRelatedSearch(query, url) {
-    const learningDomains = ["wikipedia", "medium.com", "stackexchange", "stackoverflow", "blog"];
-    const learningKeywords = ["how", "why", "what", "tutorial", "guide", "explained", "when", "where", "who"];
+  if (!query || !url) return false;
 
-    return learningDomains.some(domain => url.includes(domain)) ||
-           learningKeywords.some(word => query.toLowerCase().includes(word));
+  const queryLower = query.toLowerCase();
+  const urlLower = url.toLowerCase();
+
+  // add to this list as we see fit
+  const learningDomains = [
+    "wikipedia.org",
+    "medium.com",
+    "stackexchange.com",
+    "stackoverflow.com",
+    "quora.com",
+    "khanacademy.org",
+    "edx.org",
+    "coursera.org",
+    "github.com", // useful for code-related queries
+    "docs.google.com", // docs people read
+    "youtube.com/watch", // tutorial videos
+    "reddit.com/r/explainlikeimfive",
+    "cs50.harvard.edu"
+  ];
+
+  // stronger keyword filtering
+  const learningKeywords = [
+    // General questions
+    "how to", "how do", "how does", "how can i", "how would", "how should", "how is", "how does one",
+    "what is", "what are", "what does", "what's the difference", "what happens if", "what happens when",
+    "why does", "why do", "why is", "why would", "why should", "why can't", "why isn't",
+    "when does", "when should", "when is it okay", "when will", "when can i", "when to", "when is the best time",
+    "where is", "where can i", "where do", "where should", "where does", "where can you", "where are",
+    "who is", "who are", "who should", "who does", "who can", "who invented", "who discovered",
+  
+    // Action-based learning
+    "how i learned", "how i fixed", "how i solved", "how i built", "how i made", "how to build", "how to make", "how to fix",
+    "step by step", "step-by-step", "how it works", "how this works", "how works", "how they work", "how does it work",
+    "how do i know", "how can you tell", "how to know", "how to tell", "how to check", "how to test",
+  
+    // Opinion + decision support
+    "should i", "is it okay", "is it better", "is it safe", "do i need to", "do you need to", "am i supposed to", "can i use",
+    "best way to", "easiest way to", "fastest way to", "most efficient way to", "whats the best", "whats a good",
+  
+    // Conceptual/deep dive
+    "difference between", "versus", "vs", "vs.", "compare", "comparison between", "pros and cons of", "advantages of", "disadvantages of",
+    "explanation of", "explain", "explained", "explaining", "deep dive", "walkthrough", "rundown", "in detail",
+  
+    // Educational / technical
+    "tutorial", "tutorials", "beginner's guide", "beginner guide", "guide", "cheat sheet", "cheatsheet", "reference sheet",
+    "manual", "documentation", "docs", "docs for", "api reference", "intro to", "introduction to", "learning", "learn", "learned", "learns", "course",
+    "class", "lecture", "study", "studying", "research paper", "white paper", "thesis", "case study",
+  
+    // Examples / use cases
+    "example of", "examples of", "use case", "use cases", "how it's used", "how to use", "how people use",
+  
+    // Specific tech keywords
+    "syntax", "semantics", "runtime", "compile", "code example", "code snippet", "debug", "debugging", "fix", "resolve", "issue", "error",
+    "stack trace", "exception", "segfault", "null pointer", "timeout", "latency", "throughput", "bandwidth",
+  
+    // Generic catch-alls (less precise, but signal intent)
+    "how", "why", "what", "when", "where", "who", "explain", "understanding", "understand", "intro", "beginner"
+  ];
+  
+
+  // filter out obvious non-learning noise
+  const nonLearningKeywords = [
+    "facebook", "instagram", "twitter", "pinterest", "netflix", "espn", "spotify", "tiktok",
+    "login", "sign in", "buy", "amazon.com", "nike.com", "weather", "map", "ubereats"
+  ];
+
+  // URL/domain match
+  const matchesDomain = learningDomains.some(domain => urlLower.includes(domain));
+
+  // Keyword match
+  const matchesQuery = learningKeywords.some(keyword => queryLower.includes(keyword));
+
+  // Filter out common distractions / noise
+  const isNoise = nonLearningKeywords.some(keyword => urlLower.includes(keyword) || queryLower.includes(keyword));
+
+  return (matchesDomain || matchesQuery) && !isNoise;
 }
 
 // utility to extract query from URL
