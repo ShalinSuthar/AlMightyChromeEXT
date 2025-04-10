@@ -75,3 +75,8 @@ async function getQueryById(id) {
     };
   });
 }
+
+globalThis.getAllQueries = getAllQueries;
+globalThis.getQueryById = getQueryById;
+globalThis.saveQuery = saveQuery;
+globalThis.getDB = getDB;

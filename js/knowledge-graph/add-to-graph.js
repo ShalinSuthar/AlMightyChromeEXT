@@ -73,33 +73,9 @@ function extractQueryFromURL(url) {
     }
 }
 
-/**
- * Embed sentences for search query comparisons
- * @param {*} text 
- * @returns an embedding vector
- */
-// async function computeSentenceEmbedding(text) {
-//     try {
-//       const response = await fetch("https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getQueryEmbedding", {
-//         method: "POST",
-//         headers: {
-//           "Content-Type": "application/json"
-//         },
-//         body: JSON.stringify({ text: text })
-//       });
-  
-//       const embedding = await response.json();
-//       return embedding;
-//     } catch (error) {
-//         console.error("Error fetching embedding from backend:", error);
-//         return [];
-//     }
-// }
-
 // find similarity
 function cosineSimilarity(vecA, vecB) {
     // if something went wrong calculating embeddings, we'll default to a low-ish similarity
-    console.log(vecA, vecB);
     if (!Array.isArray(vecA) || !Array.isArray(vecB) || !vecA || !vecB) {
         return 0.4;
     }
