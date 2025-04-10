@@ -33,7 +33,7 @@ const searchQuizWidget = {
             const count = data.cachedQuizCount || 0;
             const cached = data.cachedQuiz;
         
-            if (cached && count < 25) {
+            if (cached && count < 1) {
                 chrome.storage.sync.set({ cachedQuizCount: count + 1 });
                 this.displayQuiz(cached);
             } else {
@@ -114,45 +114,29 @@ const searchQuizWidget = {
         }
     },
     getMostRelevantSearch: async function() {
-        const allQueries = await getAllQueries();
-        let maximumScore = -Infinity;
-        let mostRelevantQuery = null;
-        let relatedQueryId = null;
+        const categories = await getAllCategories();
+        if (categories.length === 0) return null;
     
-        for (let queryItem of allQueries) {
-            const related = queryItem.relatedQueries || [];
-            const relatedCount = related.length;
-            const averageSimilarity = relatedCount === 0
-                ? 0
-                : related.reduce((sum, r) => sum + r.similarity, 0) / relatedCount;
+        const randomCategory = categories[Math.floor(Math.random() * categories.length)];
+        const queries = await getQueriesByCategory(randomCategory);
+        if (!queries || queries.length === 0) return null;
     
-            const popularityScore = Math.log(1 + relatedCount);
-            const similarityScore = averageSimilarity;
+        // Filter out very recently used queries
+        const viable = queries.filter(q => {
+            const hoursSince = q.lastTimeAsked
+                ? (Date.now() - q.lastTimeAsked) / (1000 * 60 * 60)
+                : Infinity;
+            return hoursSince > 4;
+        });
     
-            const lastTimeAsked = queryItem.lastTimeAsked || 0;
-            const hoursSinceAsked = (Date.now() - lastTimeAsked) / (1000 * 60 * 60);
-            const recencyScore = 1 / (1 + Math.exp(-0.1 * (hoursSinceAsked - 24))); // sigmoid around 24h
-            const score =
-                1.5 * popularityScore +
-                3.0 * similarityScore +
-                6.5 * recencyScore;
-            if (score > maximumScore) {
-                maximumScore = score;
-                mostRelevantQuery = queryItem;
-                if (relatedCount > 0) relatedQueryId = mostRelevantQuery.relatedQueries[0].similarQuery;
-            }
-        }
-        if (!mostRelevantQuery) return null;
-
-        mostRelevantQuery.lastTimeAsked = Date.now();
-        await saveQuery(mostRelevantQuery);
-        let appendRelatedQuery  = '';
-        // lets append two queries together if they're somewhat similar
-        if (relatedQueryId) {
-            const relatedQueryObj = await getQueryById(relatedQueryId);
-            appendRelatedQuery += " " + relatedQueryObj.query.title;
-        }
-        return mostRelevantQuery.query.title + appendRelatedQuery;
+        const chosen = viable.length > 0
+            ? viable[Math.floor(Math.random() * viable.length)]
+            : queries[Math.floor(Math.random() * queries.length)];
+    
+        chosen.lastTimeAsked = Date.now();
+        await saveQueryToCategory(randomCategory, chosen);
+    
+        return chosen.query.title;
     }
 };    
 
