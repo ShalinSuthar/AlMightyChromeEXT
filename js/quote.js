@@ -7,9 +7,7 @@ const quoteWidget = {
     // Listen for theme changes in storage
     chrome.storage.onChanged.addListener((changes, areaName) => {
       if (areaName === 'sync' && changes.preferredTheme) {
-        // Do a hard refresh of the page. This might affect other components in our extension. 
-        // TODO: How can we call loadAndDisplayQuote() again and have the div "re-build" itself?
-        location.reload();
+        this.loadAndDisplayQuote();
       }
     });
   },
