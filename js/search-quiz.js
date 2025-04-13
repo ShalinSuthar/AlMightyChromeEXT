@@ -24,10 +24,13 @@ const searchQuizWidget = {
             widgetElement.style.display = "block";
         });
 
-        questionElement.innerHTML = `
+        if(questionElement){
+            questionElement.innerHTML = `
             <div class="skeleton skeleton-text"></div>
             <div class="skeleton skeleton-text skeleton-short"></div>
         `;
+        }
+        
         
         chrome.storage.sync.get(['cachedQuiz', 'cachedQuizCount'], (data) => {
             const count = data.cachedQuizCount || 0;
@@ -39,7 +42,9 @@ const searchQuizWidget = {
             } else {
                 this.fetchSearchQuizQuestion().then(quiz => {
                     if (!quiz) {
+                        if(questionElement){
                         questionElement.innerHTML = '';
+                        }
                         widgetElement.innerText = "No quiz available.";
                         return;
                     }
@@ -54,8 +59,10 @@ const searchQuizWidget = {
         const searchQuizInput = document.getElementById('search-quiz-input');
         const submitButton = document.getElementById("search-quiz-submit-button");
     
-        questionElement.innerHTML = '';
-        questionElement.innerText = quiz.question;
+        if(questionElement){
+            questionElement.innerHTML = '';
+            questionElement.innerText = quiz.question;
+        }
         searchQuizInput.value = "";
         submitButton.onclick = () => this.submitAnswerAndReceiveFeedback(quiz.question, searchQuizInput.value.trim());
     },
