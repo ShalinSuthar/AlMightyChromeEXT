@@ -221,4 +221,5 @@
   .profile-switcher {
     display: flex;
     margin: 1rem 0;
+    margin-left: 10px;
   }
