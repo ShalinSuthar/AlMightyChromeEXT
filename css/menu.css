@@ -1,0 +1,42 @@
+#menu-container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+  #menu-toggle {
+    background-color: #007aff;
+    color: white;
+    font-size: 20px;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+  }
+  
+  #dropdown-menu {
+    position: absolute;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    min-width: 180px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .menu-section {
+    margin-bottom: 12px;
+  }
+  
+  .menu-section label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+  }
+  

@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="css/search-quiz-widget.css">
   <link rel="stylesheet" href="css/wotd.css">
   <link rel="stylesheet" href="css/shortcuts.css">
+  <link rel="stylesheet" href="css/menu.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
   <title>Google Image Search</title>
 </head>
@@ -33,60 +34,57 @@
       </select>
     </div>
     
-    <div id="profile-toast" class="toast">Profile switched</div>
-    
-
-    <div id="theme-selection">
-      <div id="iamSelector" class="control-group" title="Select who you are">
-        <label id="theme-label" for="theme-select">I'm a...</label>
-        <select id="theme-select">
-          <option class="theme-option" value="storyteller">storyteller</option>
-          <option class="theme-option" value="builder">builder</option>
-          <option class="theme-option" value="wanderer">wanderer</option>
-          <option class="theme-option" value="racer">racer</option>
-          <option class="theme-option" value="wildcard">wildcard</option>
-          <option class="theme-option" value="worrier">worrier</option>
-        </select>
-      </div>
+    <!-- <div id="profile-toast" class="toast">Profile switched</div> -->
 
       <div id="feedback-icon">💡</div>
       <div id="feedback-dialog" class="hidden">
         <div id="feedback-dialog-content">
           <h3>We'd love to hear from you!</h3>
-          <textarea id="feedback-input" placeholder="Quotes, new features..."></textarea>
+          <textarea id="feedback-input" placeholder="Quotes, trivia, original writing, new features..."></textarea>
           <button id="feedback-send-button">Send Feedback</button>
         </div>
       </div>
 
-      <div id="color-picker-container" class="control-group" title="Pick a background color">
-        <input type="color" id="bgColorPicker">
-        <button id="colorPickerBtn" title="Change background color">
-          <span class="picker-icon">🎨</span>
-          <span class="picker-text">Background</span>
-        </button>
-        <!-- <span id="currentColor"></span> -->
-      </div>
-
-      <div class="control-group" title="Open widgets">
-        <button id="settingsBtn" class="icon-button">
-          <span class="settings-icon">🔮</span>
-          <span class="settings-text">Widgets</span>
-        </button>
-
-        <div id="widget-settings" class="settings-dropdown">
-          <h3>Widgets</h3>
-          <div id="widget-list"></div>
+      <div id="menu-container">
+        <button id="menu-toggle">☰</button>
+        <div id="dropdown-menu" class="hidden">
+      
+          <div class="menu-section">
+            <label id="theme-label" for="theme-select">I'm a...</label>
+            <div id="iamSelector" class="control-group" title="Select who you are"></div>
+            <select id="theme-select">
+              <option value="storyteller">storyteller</option>
+              <option value="builder">builder</option>
+              <option value="wanderer">wanderer</option>
+              <option value="racer">racer</option>
+              <option value="wildcard">wildcard</option>
+              <option value="worrier">worrier</option>
+            </select>
+          </div>
+      
+          <div class="menu-section" id="color-picker-container" title="Pick a background color">
+            <input type="color" id="bgColorPicker">
+            <button id="colorPickerBtn" title="Change background color">
+              <span class="picker-icon">🎨</span>
+              <span class="picker-text">Background</span>
+            </button>
+          </div>
+      
+          <div class="menu-section" title="Open widgets">
+            <button id="settingsBtn" class="icon-button">
+              <span class="settings-text">Widgets</span>
+            </button>
+      
+            <div id="widget-settings" class="settings-dropdown hidden">
+              <h3>Widgets</h3>
+              <div id="widget-list"></div>
+            </div>
+          </div>
+      
         </div>
-      </div>
-      <div>
-        <button id="info-button" class="icon-button right" title="Information">
-          <span class="info-icon">ℹ️</span>
-        </button>
-      </div>
-    </div>
+      </div>      
 
-
-    <div id="info-popup" class="hidden">
+    <!-- <div id="info-popup" class="hidden">
       <div id="info-popup-content">
         <h3>Enjoy...</h3>
         <ul>
@@ -104,7 +102,7 @@
           <li class="info-item" data-tooltip="Exciting new features coming soon!">And many more coming...</li>
         </ul>
       </div>
-    </div>
+    </div> -->
 
 
   </div>
@@ -175,6 +173,7 @@
   <script src="js/knowledge-graph/add-to-graph.js"></script>
   <script src="js/search-quiz.js"></script>
   <script src="js/widgets.js"></script>
+  <script src="js/menu.js"></script>
   <script src="js/custom-bg.js"></script>
 </body>
 
