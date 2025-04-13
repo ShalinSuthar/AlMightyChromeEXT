@@ -23,18 +23,17 @@
 <body>
   <div id="top-controls">
     <div class="profile-switcher">
-      <label for="profileDropdown">Profile:</label>
-      <select id="profileDropdown">
-        <option value="profile1">Profile 1</option>
-        <option value="profile2">Profile 2</option>
-        <option value="profile3">Profile 3</option>
-        <option value="profile4">Profile 4</option>
-        <option value="profile5">Profile 5</option>
-        <option value="profile6">Profile 6</option>
-      </select>
+      <div class="profile-tabs" id="profileTabs">
+        <button class="profile-tab" data-profile="storyteller">storyteller</button>
+        <button class="profile-tab" data-profile="builder">builder</button>
+        <button class="profile-tab" data-profile="wanderer">wanderer</button>
+        <button class="profile-tab" data-profile="racer">racer</button>
+        <button class="profile-tab" data-profile="wildcard">wildcard</button>
+        <button class="profile-tab" data-profile="worrier">worrier</button>
+      </div>
     </div>
     
-    <!-- <div id="profile-toast" class="toast">Profile switched</div> -->
+    <div id="profile-toast" class="toast">Profile switched</div>
 
       <div id="feedback-icon" title="Send us feedback">💡</div>
       <div id="feedback-dialog" class="hidden">
@@ -49,7 +48,7 @@
         <button id="menu-toggle">☰</button>
         <div id="dropdown-menu" class="hidden">
       
-          <div class="menu-section">
+          <!-- <div class="menu-section">
             <label id="theme-label" for="theme-select">I'm a...</label>
             <div id="iamSelector" class="control-group" title="Select who you are"></div>
             <select id="theme-select">
@@ -60,7 +59,7 @@
               <option value="wildcard">wildcard</option>
               <option value="worrier">worrier</option>
             </select>
-          </div>
+          </div> -->
       
           <div class="menu-section" id="color-picker-container" title="Pick a background color">
             <input type="color" id="bgColorPicker">
@@ -161,7 +160,6 @@
 
   <script src="js/quote.js"></script>
   <script src="js/trivia.js"></script>
-  <script src="js/preferences.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/shortcuts.js"></script>
   <script src="js/feedback.js"></script>
