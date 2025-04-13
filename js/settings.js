@@ -4,22 +4,22 @@ document.addEventListener("DOMContentLoaded", () => {
     const widgetList = document.getElementById("widget-list");
     const iamSelector = document.getElementById("iamSelector");
     const addShortcutBtn = document.getElementById("addShortcutBtn");
-    const infoButton = document.getElementById("info-button");
-    const infoPopup = document.getElementById("info-popup");
+    // const infoButton = document.getElementById("info-button");
+    // const infoPopup = document.getElementById("info-popup");
 
     let currentProfile = "default"; // fallback
 
-    infoButton.addEventListener("click", (event) => {
-        event.stopPropagation();
-        infoPopup.classList.toggle("hidden");
-        infoPopup.classList.toggle("show");
-    });
+    // infoButton.addEventListener("click", (event) => {
+    //     event.stopPropagation();
+    //     infoPopup.classList.toggle("hidden");
+    //     infoPopup.classList.toggle("show");
+    // });
 
     document.addEventListener("click", (event) => {
-        if (!infoButton.contains(event.target) && !infoPopup.contains(event.target)) {
-            infoPopup.classList.remove("show");
-            infoPopup.classList.add("hidden");
-        }
+        // if (!infoButton.contains(event.target) && !infoPopup.contains(event.target)) {
+        //     infoPopup.classList.remove("show");
+        //     infoPopup.classList.add("hidden");
+        // }
     });
 
     // --- Widget settings toggle ---

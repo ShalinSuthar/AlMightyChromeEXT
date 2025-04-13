@@ -5,10 +5,15 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function makeDraggable(element) {
+    let startX = 0, startY = 0;
     element.addEventListener('mousedown', (e) => {
         const width = element.offsetWidth;
         element.style.setProperty('--original-width', `${width}px`);
         if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+
+        startX = e.clientX;
+        startY = e.clientY;
+
         onMouseDown(e);
     });
 
@@ -45,7 +50,7 @@ function makeDraggable(element) {
         element.style.left = (element.offsetLeft - pos1) + "px";
     }
 
-    function onMouseUp() {
+    function onMouseUp(e) {
         // Stop moving when mouse is released
         document.removeEventListener('mouseup', onMouseUp);
         document.removeEventListener('mousemove', onMouseMove);
@@ -53,5 +58,13 @@ function makeDraggable(element) {
         const yKey = `${element.id.split('-')[0].toLowerCase()}Y`;
         // Save position of the widget after dragging
         chrome.storage.sync.set({ [xKey]: element.offsetLeft, [yKey]: element.offsetTop });
+
+        if (Math.abs(e.clientX - startX) < 5 && Math.abs(e.clientY - startY) < 5 && e.target.tagName !== "BUTTON") {
+            element.classList.toggle("artsy");
+            const widgetId = element.id.split('-')[0].toLowerCase();
+            const artsyKey = `artsy_${widgetId}`;
+            const isArtsy = element.classList.contains("artsy");
+            chrome.storage.sync.set({ [artsyKey]: isArtsy });
+        }
     }
 }
