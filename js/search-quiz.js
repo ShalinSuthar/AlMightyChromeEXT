@@ -36,16 +36,16 @@ const searchQuizWidget = {
             const count = data.cachedQuizCount || 0;
             const cached = data.cachedQuiz;
         
-            if (cached && count < 250) {
+            if (cached && count < 1) {
                 chrome.storage.sync.set({ cachedQuizCount: count + 1 });
                 this.displayQuiz(cached);
             } else {
                 this.fetchSearchQuizQuestion().then(quiz => {
                     if (!quiz) {
                         if(questionElement){
-                        questionElement.innerHTML = '';
+                          questionElement.innerHTML = '';
+                          widgetElement.innerText = "No quiz available yet...";
                         }
-                        widgetElement.innerText = "No quiz available.";
                         return;
                     }
                     chrome.storage.sync.set({ cachedQuiz: quiz, cachedQuizCount: 1 });
@@ -64,39 +64,34 @@ const searchQuizWidget = {
             questionElement.innerText = quiz.question;
         }
         searchQuizInput.value = "";
-        submitButton.onclick = () => this.submitAnswerAndReceiveFeedback(quiz.question, searchQuizInput.value.trim());
+        submitButton.onclick = () => this.displayFeedback(quiz.answer, searchQuizInput.value.trim(), searchQuizInput, submitButton);
     },
-    submitAnswerAndReceiveFeedback: async function(question, userAnswer) {
-        if (!userAnswer) { return; }
-
+    displayFeedback: function(idealAnswer, userAnswer, searchQuizInput, submitButton) {
         const feedbackElement = document.getElementById('search-quiz-feedback');
-        //feedbackElement.innerText = "Evaluating...";
-        feedbackElement.innerHTML = `<div class="skeleton skeleton-text skeleton-short"></div>`;
-        if (!question || !userAnswer) {
-            console.error("Missing question or userAnswer. Aborting request.");
+        if (!userAnswer) {
+            feedbackElement.innerText = "Please enter an answer.";
             return;
         }
+
+        const truncated = idealAnswer.slice(0, 100);
         
-        try {
-            const response = await fetch("https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/getSearchQuizAnswer", {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ question: question, answer: userAnswer }),
-            });
+        const needsToggle = idealAnswer.length > truncated.length;
 
-            if (!response.ok) {
-                feedbackElement.innerHTML = '';
-                feedbackElement.innerText = "Error evaluating answer.";
-                return;
-            }
+        feedbackElement.innerHTML = `<div id="ideal-answer-text">${needsToggle ? truncated + '...' : idealAnswer}</div>
+        ${needsToggle ? `<span id="toggle-answer-btn" class="toggle-answer-link">See more</span>` : ''}`;
+    
+        searchQuizInput.style.display = "none";
+        submitButton.style.display = "none";
 
-            const data = await response.json();
-            feedbackElement.innerText = "> " + data.feedback;
-        } catch (error) {
-            console.error("Error fetching feedback:", error);
-            feedbackElement.innerText = "Error fetching feedback.";
+        if (needsToggle) {
+            const toggleBtn = document.getElementById('toggle-answer-btn');
+            let expanded = false;
+            toggleBtn.onclick = () => {
+                const answerText = document.getElementById('ideal-answer-text');
+                expanded = !expanded;
+                answerText.innerText = expanded ? idealAnswer : truncated + '...';
+                toggleBtn.innerText = expanded ? "See less" : "See more";
+            };
         }
     },
     fetchSearchQuizQuestion: async function() {
