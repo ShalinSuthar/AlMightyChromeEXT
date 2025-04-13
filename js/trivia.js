@@ -86,7 +86,7 @@ const triviaWidget = {
 
         Object.entries(apiData.options).forEach(([key, value]) => {
             const optionButton = document.createElement('button');
-            optionButton.textContent = `${key}. ${value}`;
+            optionButton.textContent = `${key.toLowerCase()}. ${value.toLowerCase()}`;
             optionButton.classList.add('trivia-button');
             optionButton.addEventListener("click", () => {
                 this.handleAnswer(key, apiData.answer, triviaScore, optionButton);

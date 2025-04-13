@@ -27,7 +27,7 @@
 
 .trivia-button {
     padding: 10px;
-    background-color: #007bff;
+    background-color: #555;  /* nicer neutral */
     color: white;
     border: none;
     border-radius: 4px;
@@ -37,7 +37,7 @@
 }
 
 .trivia-button:not(.correct):not(.wrong):hover {
-    background-color: #0056b3;
+    background-color: #333;
 }
 
 .trivia-button:active {
@@ -98,16 +98,25 @@
 /* artsy themes */
 
 #trivia-container.artsy {
-    background: repeating-linear-gradient(
-      to bottom,
-      #f4f1ea,
-      #f4f1ea 30px,
-      #eae7df 30px,
-      #eae7df 60px
-    );
+    background: none; /* override gradient */
     border: 2px solid #b5b09e !important;
     font-family: 'Courier New', Courier, monospace;
     box-shadow: inset 0 0 0 2px #a18c6f;
+    background-color: white;
+}
+
+#trivia-container.artsy #trivia-question {
+    background-color: #e0e0e0;
+    padding: 6px 8px;
+    margin: 0 0 10px 0;
+}
+
+#trivia-container.artsy .trivia-button:nth-child(odd) {
+    background-color: #f8f8f8;
+}
+
+#trivia-container.artsy .trivia-button:nth-child(even) {
+    background-color: #e0e0e0;
 }
   
 #trivia-container.artsy .trivia-button {
@@ -117,4 +126,12 @@
     font-family: inherit;
     font-size: 14px;
     padding: 8px 12px;
+}
+
+#trivia-container.artsy .trivia-button {
+    border-radius: 0;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 12px;
+    color: black;
 }
