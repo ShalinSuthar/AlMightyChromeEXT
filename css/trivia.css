@@ -94,3 +94,27 @@
 #trivia-container.genius {
     background-color: #ffd700; /* Gold */
 }
+
+/* artsy themes */
+
+#trivia-container.artsy {
+    background: repeating-linear-gradient(
+      to bottom,
+      #f4f1ea,
+      #f4f1ea 30px,
+      #eae7df 30px,
+      #eae7df 60px
+    );
+    border: 2px solid #b5b09e !important;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: inset 0 0 0 2px #a18c6f;
+}
+  
+#trivia-container.artsy .trivia-button {
+    background-color: #444;
+    color: #f9f6f2;
+    border-radius: 0;
+    font-family: inherit;
+    font-size: 14px;
+    padding: 8px 12px;
+}

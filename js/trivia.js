@@ -67,9 +67,22 @@ const triviaWidget = {
         // Set Score and Difficulty
         scoreElement.textContent = `Score: ${triviaScore}`;
         difficultyElement.textContent = `Current Difficulty: ${apiData.difficulty}`;
-        widgetElement.className = `${apiData.difficulty.toLowerCase()}`;
+        widgetElement.classList.remove(
+            "easy", "medium", "hard", "challenging", "preposterous", "impossible", "genius"
+        );
+        widgetElement.classList.add(apiData.difficulty.toLowerCase());
 
         widgetElement.style.display = "block";
+
+        const widgetId = widgetElement.id.split('-')[0].toLowerCase();
+        const artsyKey = `artsy_${widgetId}`;
+        chrome.storage.sync.get([artsyKey], (res) => {
+            if (res[artsyKey]) {
+                widgetElement.classList.add("artsy");
+            } else {
+                widgetElement.classList.remove("artsy");
+            }
+        });
 
         Object.entries(apiData.options).forEach(([key, value]) => {
             const optionButton = document.createElement('button');
