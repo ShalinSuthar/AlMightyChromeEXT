@@ -12,18 +12,17 @@
     justify-content: center;
   
     /* Colors and styling */
-    background-color: #007bff;
+    background-color: #55788c;
     color: #fff;
     font-size: 24px;
     cursor: pointer;
   
     /* Slight drop shadow and hover transition */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     transition: background-color 0.2s ease;
   }
   
   #feedback-icon:hover {
-    background-color: #0056b3;
+    background-color: #5a7d7c;
   }
   
   #feedback-dialog {
