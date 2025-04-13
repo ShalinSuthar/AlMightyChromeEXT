@@ -8,7 +8,7 @@ const widgets = [
   
   function loadWidgetsForCurrentProfile() {
     chrome.storage.sync.get("currentProfile", (res) => {
-      const profileName = res.currentProfile || "default";
+      const profileName = res.currentProfile || "storyteller";
       const widgetKey = `enabledWidgets_${profileName}`;
   
       chrome.storage.sync.get(widgetKey, (data) => {
