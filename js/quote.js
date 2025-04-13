@@ -1,116 +1,86 @@
-// quote widget renders quotes
 const quoteWidget = {
   id: "quote",
   name: "Quotes",
+
   render: function () {
-    this.loadAndDisplayQuote();
-    // Listen for theme changes in storage
+    chrome.storage.sync.get("currentProfile", ({ currentProfile }) => {
+      const profile = currentProfile || "storyteller";
+      const widgetKey = `enabledWidgets_${profile}`;
+
+      chrome.storage.sync.get(widgetKey, (data) => {
+        const enabledWidgets = data[widgetKey] || [];
+
+        if (enabledWidgets.includes("quote")) {
+          this.loadAndDisplayQuote();
+        } else {
+          this.hide();
+        }
+      });
+    });
+
     chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === 'sync' && changes.preferredTheme) {
-        this.loadAndDisplayQuote();
+      if (areaName === 'sync' && changes.currentProfile) {
+        this.render(); 
       }
     });
   },
+
   hide: function () {
     const quoteContainer = document.getElementById("quote-text");
     if (quoteContainer) {
       quoteContainer.textContent = "";
-      quoteContainer.classList.remove('typing');
+      quoteContainer.classList.remove("typing");
     }
-    const widgetElement = document.getElementById('quote-container');
+
+    const widgetElement = document.getElementById("quote-container");
     if (widgetElement) {
       widgetElement.style.display = "none";
     }
   },
+
   loadAndDisplayQuote: function () {
     const quoteContainer = document.getElementById("quote-text");
     const widgetElement = document.getElementById("quote-container");
-
     quoteContainer.textContent = "";
 
-    chrome.storage.sync.get(['quoteX', 'quoteY'], (browserData) => {
-      widgetElement.style.left = `${browserData.quoteX}px`;
-      widgetElement.style.top = `${browserData.quoteY}px`;
+    chrome.storage.sync.get(['quoteX', 'quoteY'], (pos) => {
+      widgetElement.style.left = `${pos.quoteX || 0}px`;
+      widgetElement.style.top = `${pos.quoteY || 0}px`;
     });
-    // fetch user theme preference
-    chrome.storage.sync.get('preferredTheme', (data) => {
-      let selectedTheme = data.preferredTheme || 'default';
-      let indexKey = `${selectedTheme}Index`;
+
+    chrome.storage.sync.get("currentProfile", ({ currentProfile }) => {
+      const profile = currentProfile || "storyteller";
+      const indexKey = `${profile}Index`;
 
       chrome.storage.sync.get(indexKey, (indexData) => {
-        let index = indexData[indexKey] || 0;
-          fetch(`https://doa508wm14jjw.cloudfront.net/${selectedTheme}_quotes.json`)
-          .then(response =>response.json())
+        const index = indexData[indexKey] || 0;
+
+        fetch(`https://doa508wm14jjw.cloudfront.net/${profile}_quotes.json`)
+          .then(res => res.json())
           .then(quotes => {
+            const filtered = quotes.filter(q =>
+              q.category?.toLowerCase() === profile.toLowerCase()
+            );
+            const usable = filtered.length > 0 ? filtered : quotes;
+            const quoteObj = usable[index % usable.length];
 
-          // Filter quotes based on category (or fallback to all)
-          const filteredQuotes = quotes.filter(q => q.category.toLowerCase() === selectedTheme.toLowerCase());
+            widgetElement.style.display = "block";
+            quoteContainer.textContent = quoteObj.text;
 
-          if (filteredQuotes.length === 0) {
-              throw new Error(`No quotes found for category: ${selectedTheme}`);
-          }
+            const themes = ["happy", "melancholic", "inspirational", "thoughtful", "motivational"];
+            const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+            widgetElement.classList.add(quoteObj.theme || randomTheme);
 
-          // Get the specific quote at the given index
-          const randomQuote = filteredQuotes[index];
-
-          // **Render quote**
-          const widgetElement = document.getElementById('quote-container');
-          widgetElement.style.display = "block";
-          quoteContainer.textContent = randomQuote.text;
-
-          // **Pick a theme**
-          let themes = ["happy", "melancholic", "inspirational", "thoughtful", "motivational"];
-          const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-          widgetElement.classList.add(randomQuote.theme ?? randomTheme);
-
-          // **Typewriter effect**
-          // typeWriterEffect(randomQuote.text, quoteContainer);
-
-          // **Update index in storage**
-          let nextIndex = (index + 1) % filteredQuotes.length;
-          chrome.storage.sync.set({ [indexKey]: nextIndex });
-        })
-        .catch(error => {
-          console.error("Error fetching quote:", error);
-        });
+            const nextIndex = (index + 1) % usable.length;
+            chrome.storage.sync.set({ [indexKey]: nextIndex });
+          })
+          .catch(err => {
+            console.error("Error fetching quote:", err);
+            quoteContainer.textContent = "Could not load quote.";
+          });
       });
     });
-    function typeWriterEffect(text, element) {
-      element.classList.add('typing');
-      element.innerHTML = "";
-      let index = 0;
-
-      let typingActive = true;
-
-      function type() {
-        if (!typingActive) return;
-        if (index < text.length) {
-          element.innerHTML += text.charAt(index);
-          index++;
-          setTimeout(type, 100);
-        } else {
-          element.classList.remove('typing');
-        }
-      }
-
-      type();
-
-      quoteWidget.hide = function () {
-        typingActive = false;
-        if (element) {
-          element.textContent = "";
-          element.innerHTML = "";
-          element.classList.remove('typing');
-        }
-        const widgetElement = document.getElementById('quote-container');
-        if (widgetElement) {
-          widgetElement.style.display = "none";
-        }
-      };
-    }
-
-
   }
-}
+};
 
 window.quoteWidget = quoteWidget;

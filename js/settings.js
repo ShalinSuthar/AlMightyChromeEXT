@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const settingsBtn = document.getElementById("settingsBtn");
     const widgetSettings = document.getElementById("widget-settings");
     const widgetList = document.getElementById("widget-list");
-    const iamSelector = document.getElementById("iamSelector");
+    // const iamSelector = document.getElementById("iamSelector");
     const addShortcutBtn = document.getElementById("addShortcutBtn");
     const profileToast = document.getElementById("profile-toast");
     const profileTabs = document.querySelectorAll(".profile-tab");
@@ -126,9 +126,9 @@ document.addEventListener("DOMContentLoaded", () => {
   
     
     function toggleWidgetVisibility(enabledWidgets) {
-      if (iamSelector) {
-        iamSelector.style.display = enabledWidgets.includes("quote") ? "block" : "none";
-      }
+    //   if (iamSelector) {
+    //     iamSelector.style.display = enabledWidgets.includes("quote") ? "block" : "none";
+    //   }
       if (addShortcutBtn) {
         addShortcutBtn.style.display = enabledWidgets.includes("shortcuts") ? "block" : "none";
       }
