@@ -3,15 +3,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const colorBtn = document.getElementById('colorPickerBtn');
   
     function applyBackground(profile) {
-      chrome.storage.sync.get(profile, (data) => {
-        if (data[profile] && 'bgColor' in data[profile]) {
-          const bgColor = data[profile].bgColor;
-          document.body.style.backgroundColor = bgColor;
-          if (colorPicker) colorPicker.value = bgColor;
-        } else {
-          console.log(`No bgColor for '${profile}', keeping current background.`);
-        }
-      });
+      // chrome.storage.sync.get(profile, (data) => {
+      //   if (data[profile] && 'bgColor' in data[profile]) {
+      //     const bgColor = data[profile].bgColor;
+      //     document.body.style.backgroundColor = bgColor;
+      //     if (colorPicker) colorPicker.value = bgColor;
+      //   } else {
+      //     console.log(`No bgColor for '${profile}', keeping current background.`);
+      //   }
+      // });
     }
   
     chrome.storage.sync.get("currentProfile", ({ currentProfile }) => {
