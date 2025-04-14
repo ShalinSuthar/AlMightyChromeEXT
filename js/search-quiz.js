@@ -64,36 +64,26 @@ const searchQuizWidget = {
             questionElement.innerText = quiz.question;
         }
         searchQuizInput.value = "";
-        submitButton.onclick = () => this.displayFeedback(quiz.answer, searchQuizInput.value.trim(), searchQuizInput, submitButton);
+        submitButton.onclick = () => this.displayFeedback(quiz.answer || quiz.explanation, searchQuizInput.value.trim(), searchQuizInput, submitButton);
     },
     displayFeedback: function(idealAnswer, userAnswer, searchQuizInput, submitButton) {
         const feedbackElement = document.getElementById('search-quiz-feedback');
+    
         if (!userAnswer) {
             feedbackElement.innerText = "Please enter an answer.";
             return;
         }
-
-        const truncated = idealAnswer.slice(0, 100);
-        
-        const needsToggle = idealAnswer.length > truncated.length;
-
-        feedbackElement.innerHTML = `<div id="ideal-answer-text">${needsToggle ? truncated + '...' : idealAnswer}</div>
-        ${needsToggle ? `<span id="toggle-answer-btn" class="toggle-answer-link">See more</span>` : ''}`;
+    
+        feedbackElement.innerHTML = `
+          <div class="terminal-answer-block">
+            <div><span class="label">Computer answer:</span>\n${idealAnswer}</div>
+            <div><span class="label">Your answer:</span>\n${userAnswer}</div>
+          </div>
+        `;
     
         searchQuizInput.style.display = "none";
         submitButton.style.display = "none";
-
-        if (needsToggle) {
-            const toggleBtn = document.getElementById('toggle-answer-btn');
-            let expanded = false;
-            toggleBtn.onclick = () => {
-                const answerText = document.getElementById('ideal-answer-text');
-                expanded = !expanded;
-                answerText.innerText = expanded ? idealAnswer : truncated + '...';
-                toggleBtn.innerText = expanded ? "See less" : "See more";
-            };
-        }
-    },
+    },    
     fetchSearchQuizQuestion: async function() {
         try {
             const searchQuery = await this.getMostRelevantSearch();

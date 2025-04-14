@@ -44,43 +44,28 @@
         </div>
       </div>
 
-      <div id="menu-container" title="Settings menu">
-        <button id="menu-toggle">☰</button>
-        <div id="dropdown-menu" class="hidden">
+      <div id="menu-toggle" class="collapsed">
+        <span id="menu-icon">☰</span>
       
-          <!-- <div class="menu-section">
-            <label id="theme-label" for="theme-select">I'm a...</label>
-            <div id="iamSelector" class="control-group" title="Select who you are"></div>
-            <select id="theme-select">
-              <option value="storyteller">storyteller</option>
-              <option value="builder">builder</option>
-              <option value="wanderer">wanderer</option>
-              <option value="racer">racer</option>
-              <option value="wildcard">wildcard</option>
-              <option value="worrier">worrier</option>
-            </select>
-          </div> -->
-      
-          <div class="menu-section" id="color-picker-container" title="Pick a background color">
+        <div id="menu-content">
+          <div class="menu-section" id="color-picker-container">
             <input type="color" id="bgColorPicker">
-            <button id="colorPickerBtn" title="Change background color">
+            <button id="colorPickerBtn">
               <span class="picker-text">Background</span>
             </button>
           </div>
       
-          <div class="menu-section" title="Open widgets">
+          <div class="menu-section">
             <button id="settingsBtn" class="icon-button">
               <span class="settings-text">Widgets</span>
             </button>
       
             <div id="widget-settings" class="settings-dropdown hidden">
-              <h3>Widgets</h3>
               <div id="widget-list"></div>
             </div>
           </div>
-      
         </div>
-      </div>      
+      </div>
 
     <!-- <div id="info-popup" class="hidden">
       <div id="info-popup-content">
@@ -140,7 +125,7 @@
     <div id="search-quiz-input-container">
       <h4 id="search-quiz-question" title="Search Quiz Question"></h4>
       <textarea type="text" id="search-quiz-input" placeholder="Your answer..."></textarea>
-      <button id="search-quiz-submit-button">Submit</button>
+      <button id="search-quiz-submit-button">></button>
     </div>
     <div id="search-quiz-feedback"></div>
   </div>

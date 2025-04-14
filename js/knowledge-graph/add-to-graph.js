@@ -15,7 +15,6 @@ function isLearningRelatedSearch(query, url) {
     "khanacademy.org",
     "edx.org",
     "coursera.org",
-    "github.com", // useful for code-related queries
     "docs.google.com", // docs people read
     "youtube.com/watch", // tutorial videos
     "reddit.com/r/explainlikeimfive",
