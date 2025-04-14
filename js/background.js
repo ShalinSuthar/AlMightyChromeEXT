@@ -3,6 +3,9 @@
 // and a minified bundle with all other UI code
 importScripts('knowledge-graph/add-to-graph.js', 'knowledge-graph/db-operations.js');
 
+let lastSyncTimestamp = 0;
+const SYNC_INTERVAL = 30000;
+
 chrome.runtime.onStartup.addListener(() => {
   console.log('Extension started');
   syncHistoryQueries().then(res => {
@@ -10,6 +13,9 @@ chrome.runtime.onStartup.addListener(() => {
 });
 
 chrome.tabs.onCreated.addListener(() => {
-  syncHistoryQueries().then(res => {
-  });
+  const now = Date.now();
+  if (now - lastSyncTimestamp >= SYNC_INTERVAL) {
+    lastSyncTimestamp = now;
+    syncHistoryQueries().catch(console.error);
+  }
 });
