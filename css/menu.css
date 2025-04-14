@@ -1,42 +1,102 @@
-#menu-container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-  }
-  
-  #menu-toggle {
-    background-color: #55788c;
-    color: white;
-    font-size: 20px;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-  }
-  
-  #dropdown-menu {
-    position: absolute;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 10px;
-    min-width: 180px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  .menu-section {
-    margin-bottom: 12px;
-  }
-  
-  .menu-section label {
-    display: block;
-    margin-bottom: 4px;
-    font-weight: bold;
-  }
-  
+/* --- MENU TOGGLE BUTTON --- */
+#menu-toggle {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #55788c;
+  color: white;
+  font-size: 20px;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* Expanded state (menu grows) */
+#menu-toggle.expanded {
+  width: 220px;
+  padding: 5px;
+  border-radius: 8px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  height: auto;
+}
+
+/* Icon fades out on expand */
+#menu-icon {
+  transition: opacity 0.1s ease;
+}
+#menu-toggle.expanded #menu-icon {
+  opacity: 0;
+}
+
+/* --- MENU CONTENT --- */
+#menu-content {
+  width: 100%;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  visibility: hidden;
+  transition: all 0.1s ease;
+}
+
+#menu-toggle.expanded #menu-content {
+  max-height: 800px;
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* --- MENU SECTIONS --- */
+.menu-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+  margin-top: 0; /* remove this if it exists */
+}
+
+.menu-section + .menu-section {
+  margin-top: 10px;
+}
+
+.menu-section button {
+  background-color: #eee;
+  color: #333;
+  border: none;
+  /* padding: 10px; */
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  /* text-align: left; */
+  transition: background 0.2s;
+}
+.menu-section button:hover {
+  background-color: #ddd;
+}
+
+/* --- WIDGET SETTINGS PANEL --- */
+.settings-dropdown {
+  margin-top: 10px;
+  max-height: 1000px;
+  opacity: 1;
+  visibility: visible;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+/* Hidden = fade and collapse, but no display: none */
+.settings-dropdown.hidden {
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+}

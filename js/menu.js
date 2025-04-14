@@ -1,29 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const toggleBtn = document.getElementById("menu-toggle");
-    const dropdown = document.getElementById("dropdown-menu");
-    const settingsBtn = document.getElementById("settingsBtn");
-    const widgetPanel = document.getElementById("widget-settings");
-  
-    // Toggle dropdown menu
-    toggleBtn.addEventListener("click", (e) => {
+  const menu = document.getElementById("menu-toggle");
+  const settingsBtn = document.getElementById("settingsBtn");
+  const widgetPanel = document.getElementById("widget-settings");
+
+  // Expand menu
+  menu.addEventListener("click", (e) => {
+    if (!e.target.closest('#settingsBtn')) {
       e.stopPropagation();
-      dropdown.classList.toggle("hidden");
-    });
-  
-    // Toggle widget panel without closing the menu
-    settingsBtn.addEventListener("click", (e) => {
-      e.stopPropagation(); // prevent closing dropdown
-      widgetPanel.classList.toggle("hidden");
-    });
-  
-    // Close both menus if clicking outside
-    document.addEventListener("click", (e) => {
-      if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
-        dropdown.classList.add("hidden");
-      }
-  
-      if (!widgetPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
-        widgetPanel.classList.add("hidden");
-      }
-    });
-  });  
+      menu.classList.toggle("expanded");
+    }
+  });
+
+  // Toggle widget panel
+  settingsBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (widgetPanel.classList.contains("hidden")) {
+      widgetPanel.classList.remove("hidden");
+    } else {
+      widgetPanel.classList.add("hidden");
+    }
+    
+  });
+
+  // Collapse everything on outside click
+  document.addEventListener("click", (e) => {
+    if (!menu.contains(e.target)) {
+      menu.classList.remove("expanded");
+      widgetPanel.classList.add("hidden");  
+    }
+  });
+});
