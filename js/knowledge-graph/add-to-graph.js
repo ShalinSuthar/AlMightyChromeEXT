@@ -64,7 +64,7 @@ function isLearningRelatedSearch(query, url) {
   // filter out obvious non-learning noise
   const nonLearningKeywords = [
     "facebook", "instagram", "twitter", "pinterest", "netflix", "espn", "spotify", "tiktok",
-    "login", "sign in", "buy", "amazon.com", "nike.com", "weather", "map", "ubereats"
+    "login", "sign in", "buy", "amazon.com", "nike.com", "weather", "map", "ubereats", "github"
   ];
 
   // URL/domain match

@@ -4,6 +4,7 @@ const widgets = [
     window.shortcutsWidget,
     window.wotdWidget,
     window.searchQuizWidget,
+    window.writingWidget,
   ];
   
   function loadWidgetsForCurrentProfile() {
