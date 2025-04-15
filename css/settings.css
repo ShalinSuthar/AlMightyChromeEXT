@@ -72,9 +72,6 @@
     font-size: 14px;
 }
 
-.widget-item :hover {
-    background: #537cd6;
-}
 .widget-item label {
     display: flex;
     align-items: center;
