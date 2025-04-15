@@ -9,15 +9,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentProfile = "storyteller";
 
-
-    settingsBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        widgetSettings.classList.toggle("show");
-    });
+    widgetSettings.classList.toggle("show");
+    // settingsBtn.addEventListener("click", (e) => {
+    //     e.stopPropagation();
+    //     
+    // });
 
     document.addEventListener("click", (e) => {
-        if (!widgetSettings.contains(e.target) && !settingsBtn.contains(e.target)) {
-            widgetSettings.classList.remove("show");
+        if (!widgetSettings.contains(e.target)) {
+            // widgetSettings.classList.remove("show");
         }
     });
 
@@ -71,23 +71,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
             widgets.forEach(widget => {
                 const widgetItem = document.createElement("div");
-                widgetItem.className = "widget-item";
+    widgetItem.className = "widget-item";
 
-                const label = document.createElement("label");
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.checked = enabledWidgets.includes(widget.id);
+    const label = document.createElement("label");
+    label.className = "toggle-switch"; // important for styling
 
-                const text = document.createTextNode(widget.name);
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = enabledWidgets.includes(widget.id);
+    checkbox.className = "toggle-input";
 
-                checkbox.addEventListener("change", () => {
-                    handleWidgetToggle(widget.id, checkbox.checked, profileName);
-                });
+    const slider = document.createElement("span");
+    slider.className = "slider";
 
-                label.appendChild(checkbox);
-                label.appendChild(text);
-                widgetItem.appendChild(label);
-                widgetList.appendChild(widgetItem);
+    const text = document.createElement("span");
+    text.className = "toggle-label";
+    text.textContent = widget.name;
+
+    checkbox.addEventListener("change", () => {
+        handleWidgetToggle(widget.id, checkbox.checked, profileName);
+    });
+
+    label.appendChild(checkbox);
+    label.appendChild(slider);
+
+    widgetItem.appendChild(text);
+    widgetItem.appendChild(label);
+    widgetList.appendChild(widgetItem);
             });
 
             updateWidgets(profileName);
