@@ -65,23 +65,41 @@
 }
 
 #colorPickerBtn {
-    /* display: flex; */
+    display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 16px;
-    background: #55788c;
+    padding: 6px 12px;
+    background-color: #55788c;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    font-family: 'Open Sans', sans-serif;
     font-size: 14px;
     transition: background-color 0.2s ease;
-}
-
-#colorPickerBtn:hover {
-    background: #537cd6;
-}
+    justify-content: space-between;
+  }
+  
+  #colorPickerBtn:hover {
+    background-color: #537cd6;
+  }
+  
+  .color-swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 22px;
+    margin-right: 9px;
+    background: linear-gradient(45deg, #ff6ec4, #7873f5, #4ade80, #facc15);
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+    border: 1px solid rgba(255,255,255,0.6);
+  }
+  
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
 
 .picker-icon {
     font-size: 16px;
