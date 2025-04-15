@@ -1,0 +1,46 @@
+#writing-container {
+    font-family: serif;
+    font-size: 16px;
+    color: #111;
+    background: #fff;
+    padding: 20px;
+    border-radius: 0;
+    box-shadow: none;
+    overflow-y: auto;
+    min-width: 500px;
+    max-width: 500px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#writing-container::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, white);
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+  
+#writing-container.hide-fade::after {
+    opacity: 0;
+}
+  
+#writing-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+  
+#writing-container h3 {
+    margin-top: 0;
+    font-weight: bold;
+    font-size: 20px;
+}
+  
+#writing-container p {
+    margin: 10px 0;
+    line-height: 1.6;
+}  
