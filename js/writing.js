@@ -38,36 +38,77 @@ const writingWidget = {
             container.style.top = `${y}px`;
         });
     },
-
+    fetchRandomShardParagraph: async function(slug, fileBase, baseUrl) {
+        const shardIndex = Math.floor(Math.random() * 15);
+        const apiUrl = `${baseUrl}/${slug}/${fileBase}${shardIndex}.json`
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+    
+        const paras = data.paragraphs;
+        const paragraph = paras[Math.floor(Math.random() * paras.length)];
+        return {
+            title: `${data.title} – ${data.author}`,
+            html: `<p>${paragraph}</p>`
+        };
+    },
     loadAndDisplayWritingWidget: async function () {
         const container = document.getElementById("writing-container");
         if (!container) return;
-
+    
         try {
-            const res = await fetch("http://tomisthoughtshop.com.s3-website-us-east-1.amazonaws.com/json/postsByKeyword.json");
-            const data = await res.json();
-
-            const fictionPosts = data["Fiction"];
-            if (!fictionPosts || fictionPosts.length === 0) {
-                container.innerHTML = "<p>No fiction stories found.</p>";
-                return;
+            const source = writingSources[Math.floor(Math.random() * writingSources.length)];
+    
+            let result;
+            if (source.type === "blog") {
+                result = await source.fetch();
+            } else if (source.type === "shard") {
+                result = await this.fetchRandomShardParagraph(source.slug, source.fileBase, source.baseUrl);
             }
-
-            const story = fictionPosts[Math.floor(Math.random() * fictionPosts.length)];
-            const storyHTML = story.paragraphs.map(p => `<p>${p.textBody}</p>`).join("");
-
+    
             container.innerHTML = `
-                <h3>${story.title}</h3>
-                ${storyHTML}
+                <h3>${result.title}</h3>
+                ${result.html}
             `;
             container.style.display = "block";
             this.setupFadeOnScroll(container);
         } catch (err) {
-            console.error("Error loading fiction story:", err);
-            container.innerHTML = "<p>Failed to load story.</p>";
+            console.error("Error loading writing widget:", err);
+            container.innerHTML = "<p>Failed to load writing.</p>";
             container.style.display = "block";
         }
-    }
+    }    
 };
 
 window.writingWidget = writingWidget;
+
+const writingSources = [
+    {
+        type: "blog",
+        name: "Tomi",
+        fetch: async () => {
+            const res = await fetch("http://tomisthoughtshop.com.s3-website-us-east-1.amazonaws.com/json/postsByKeyword.json");
+            const data = await res.json();
+            const fictionPosts = data["Fiction"] ?? [];
+
+            if (fictionPosts.length === 0) throw new Error("No blog fiction found");
+
+            const story = fictionPosts[Math.floor(Math.random() * fictionPosts.length)];
+            const html = story.paragraphs.map(p => `<p>${p.textBody}</p>`).join("");
+            return { title: story.title, html };
+        }
+    },
+    {
+        type: "shard",
+        name: "Melville",
+        slug: "herman_melville_moby_dick_shards",
+        fileBase: "herman_melville_moby_dick_shard",
+        baseUrl: "https://doa508wm14jjw.cloudfront.net/fiction",
+    },
+    {
+        type: "shard",
+        name: "Twain",
+        slug: "mark_twain_innocents_abroad_shards",
+        fileBase: "mark_twain_innocents_abroad_shard",
+        baseUrl: "https://doa508wm14jjw.cloudfront.net/fiction",
+    }
+];
