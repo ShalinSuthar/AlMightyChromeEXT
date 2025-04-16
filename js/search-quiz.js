@@ -77,7 +77,7 @@ const searchQuizWidget = {
         feedbackElement.innerHTML = `
           <div class="terminal-answer-block">
             <div><span class="label">Computer answer:</span>\n${idealAnswer}</div>
-            <div><span class="label">Your answer:</span>\n${userAnswer}</div>
+            <div><span class="label your-answer">Your answer:</span>\n${userAnswer}</div>
           </div>
         `;
     
