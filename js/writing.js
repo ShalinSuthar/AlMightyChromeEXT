@@ -67,6 +67,39 @@ const writingWidget = {
         await chrome.storage.sync.set({ [cacheKey]: JSON.stringify(result) });
     
         return result;
+    },
+    getWritingSources: async function () {
+        try {
+            const res = await fetch("https://doa508wm14jjw.cloudfront.net/fiction/index.json");
+            const sources = await res.json() || [];
+    
+            // push blog to sources
+            sources.push({
+                type: "blog",
+                name: "Tomi",
+                fetch: async () => {
+                    const res = await fetch("http://tomisthoughtshop.com.s3-website-us-east-1.amazonaws.com/json/postsByKeyword.json");
+                    const data = await res.json();
+                    const fictionPosts = data["Fiction"] ?? [];
+    
+                    if (fictionPosts.length === 0) throw new Error("No blog fiction found");
+    
+                    const story = fictionPosts[Math.floor(Math.random() * fictionPosts.length)];
+                    const paras = story.paragraphs.map(p => p.textBody).filter(p => p.length > 100);
+                    const randPara = paras[Math.floor(Math.random() * paras.length)];
+    
+                    return {
+                        title: `${story.title} – Tomi`,
+                        html: `<p>${randPara}</p>`
+                    };
+                }
+            });
+    
+            return sources;
+        } catch (err) {
+            console.error("Failed to fetch dynamic writing sources:", err);
+            return [];
+        }
     },    
     loadAndDisplayWritingWidget: async function () {
         const container = document.getElementById("writing-container");
@@ -88,6 +121,13 @@ const writingWidget = {
             if (useCached && fictionGlobalCache) {
                 result = JSON.parse(fictionGlobalCache);
             } else {
+                const writingSources = await this.getWritingSources();
+                if (!writingSources.length) {
+                    container.innerHTML = `
+                    <h3>The story of the sad path}</h3>
+                    <p> One day, Shalin and Tomas wrote very bad code that broke. And they were sorry...</p>`;
+                    return;
+                }
                 const source = writingSources[Math.floor(Math.random() * writingSources.length)];
     
                 if (source.type === "blog") {
@@ -123,60 +163,3 @@ const writingWidget = {
 };
 
 window.writingWidget = writingWidget;
-
-const writingSources = [
-    {
-        type: "blog",
-        name: "Tomi",
-        fetch: async () => {
-            // Track how many times the widget has loaded
-            const {
-                fictionGlobalCount = 0,
-                fictionGlobalCache
-            } = await chrome.storage.sync.get(["fictionGlobalCount", "fictionGlobalCache"]);
-
-            const useCached = fictionGlobalCount % 3 !== 0;
-
-            await chrome.storage.sync.set({ fictionGlobalCount: (fictionGlobalCount + 1) % 3 });
-
-            if (useCached && fictionGlobalCache) {
-                return JSON.parse(fictionGlobalCache);
-            }
-
-            // Fetch fresh data every 3rd load
-            const res = await fetch("http://tomisthoughtshop.com.s3-website-us-east-1.amazonaws.com/json/postsByKeyword.json");
-            const data = await res.json();
-            const fictionPosts = data["Fiction"] ?? [];
-
-            if (fictionPosts.length === 0) throw new Error("No blog fiction found");
-
-            const story = fictionPosts[Math.floor(Math.random() * fictionPosts.length)];
-            const paras = story.paragraphs.map(p => p.textBody).filter(p => p.length > 100);
-            const randPara = paras[Math.floor(Math.random() * paras.length)];
-
-            const result = {
-                title: `${story.title} – Tomi`,
-                html: `<p>${randPara}</p>`
-            };
-
-            // Cache it
-            await chrome.storage.sync.set({ fictionGlobalCache: JSON.stringify(result) });
-
-            return result;
-        }
-    },
-    {
-        type: "shard",
-        name: "Melville",
-        slug: "herman_melville_moby_dick_shards",
-        fileBase: "herman_melville_moby_dick_shard",
-        baseUrl: "https://doa508wm14jjw.cloudfront.net/fiction",
-    },
-    {
-        type: "shard",
-        name: "Twain",
-        slug: "mark_twain_innocents_abroad_shards",
-        fileBase: "mark_twain_innocents_abroad_shard",
-        baseUrl: "https://doa508wm14jjw.cloudfront.net/fiction",
-    }
-];
