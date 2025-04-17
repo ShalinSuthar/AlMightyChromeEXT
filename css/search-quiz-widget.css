@@ -2,7 +2,7 @@
 #search-quiz-container {
   width: 320px;
   background-color: #000; /* black terminal bg */
-  border-radius: 8px;
+  /* border-radius: 8px; */
   padding: 10px 20px 20px 20px; /* top right bottom left */
   position: absolute;
   top: 20px;
