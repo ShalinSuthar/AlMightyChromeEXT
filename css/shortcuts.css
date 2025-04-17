@@ -1,194 +1,63 @@
-#shortcutContainer {
-  display: grid;
-  grid-template-columns: repeat(5, 112px); /* Fixed 5 columns */
-  gap: 16px;
-  margin: 20px auto;
-  max-width: 600px;
-  justify-content: center;
-  padding: 0 20px;
-}
-
-/* Responsive grid adjustments */
-@media (max-width: 600px) {
-  #shortcutContainer {
-      grid-template-columns: repeat(3, 112px);
-  }
-}
-
-@media (max-width: 400px) {
-  #shortcutContainer {
-      grid-template-columns: repeat(2, 112px);
-  }
-}
-
-#addShortcutBtn {
-  display: block;
-  margin: 20px auto;
-  background-color: #fff;
-  border: none;
-  color: #3c4043;
-  padding: 8px 16px;
-  font-size: 14px;
-  cursor: pointer;
-  border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-  transition: all 0.2s ease-in-out;
-  outline: none;
-}
-
-#addShortcutBtn:hover:not(:disabled) {
-  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
-
-#addShortcutBtn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.shortcut-tile {
-  width: 112px;
-  height: 112px;
-  background-color: #fff;
+#shortcuts-container {
+  width: 200px;
+  height: 250px;
+  overflow: hidden;
+  border: 1px solid #ccc;
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  padding: 10px;
+  background: #f9f9f9;
   display: flex;
   flex-direction: column;
+  gap: 10px;
+  font-family: sans-serif;
+}
+
+#shortcut-form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+#shortcut-search,
+#shortcut-title,
+#shortcut-url,
+#shortcut-save,
+#shortcut-toggle-form {
+  outline: none;
+  border: none;
+  background: white;
+  padding: 6px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#shortcut-list {
+  height: 140px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding-right: 4px;
+}
+
+.shortcut-item {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  background: #fff;
+  border-radius: 4px;
+  padding: 4px 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.shortcut-item span {
   cursor: pointer;
-  position: relative;
-  transition: all 0.2s ease-in-out;
-  padding: 12px;
-  box-sizing: border-box;
 }
 
-.shortcut-tile:hover {
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-  transform: translateY(-1px);
-}
-
-.shortcut-tile img {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 8px;
-  border-radius: 50%;
-  object-fit: contain;
-  background-color: #f8f9fa;
-  padding: 4px;
-}
-
-.shortcut-tile span {
-  display: block;
-  max-width: 90%;
-  font-size: 12px;
-  color: #5f6368;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  margin-top: 4px;
-}
-
-.shortcut-tile button {
-  position: absolute;
-  top: 4px;
+.shortcut-item button {
   background: transparent;
   border: none;
-  cursor: pointer;
-  color: #777;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-  padding: 4px;
-  border-radius: 50%;
-}
-
-.shortcut-tile:hover button {
-  opacity: 1;
-}
-
-.shortcut-tile .edit-btn {
-  right: 28px;
-}
-
-.shortcut-tile .delete-btn {
-  right: 4px;
-  font-size: 16px;
-}
-
-.shortcut-tile button:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: #000;
-}
-
-/* Modal CSS */
-#shortcutModal {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 400px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 8px;
-  padding: 24px;
-  z-index: 9999;
-}
-
-#modalTitle {
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  color: #202124;
-}
-
-#shortcutModal label {
-  display: block;
-  margin: 8px 0 4px;
-  font-size: 14px;
-  color: #5f6368;
-}
-
-#shortcutModal input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 16px;
-  font-size: 14px;
-  border: 1px solid #dadce0;
-  border-radius: 4px;
-  color: #202124;
-  box-sizing: border-box;
-}
-
-#shortcutModal input:focus {
-  outline: none;
-  border-color: #1a73e8;
-  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
-}
-
-#shortcutModal button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
+  color: #888;
   cursor: pointer;
   font-size: 14px;
-  margin-right: 8px;
-}
-
-#saveShortcutBtn {
-  background-color: #1a73e8;
-  color: #fff;
-}
-
-#saveShortcutBtn:hover {
-  background-color: #1557b0;
-}
-
-#cancelShortcutBtn {
-  background-color: #f1f3f4;
-  color: #5f6368;
-}
-
-#cancelShortcutBtn:hover {
-  background-color: #e8eaed;
 }

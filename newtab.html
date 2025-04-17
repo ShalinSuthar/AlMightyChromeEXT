@@ -94,21 +94,19 @@
   </div>
 
   <div id="main">
-
-    <div id="shortcutContainer"></div>
-    <button id="addShortcutBtn" title="Add a new shortcut">+ Add Shortcut</button>
-
-    <div id="shortcutModal" style="display:none;" title="Shortcut settings">
-      <div class="modal-content">
-        <h2 id="modalTitle">Add Shortcut</h2>
-        <label for="shortcutTitle">Name</label>
-        <input type="text" id="shortcutTitle" title="Enter shortcut name" />
-        <label for="shortcutUrl">URL</label>
-        <input type="url" id="shortcutUrl" title="Enter shortcut URL" />
-        <button id="saveShortcutBtn" title="Save shortcut">Save</button>
-        <button id="cancelShortcutBtn" title="Cancel">Cancel</button>
+    <div id="shortcuts-container" class="draggable-component">
+      <h3>Shortcuts</h3>
+      <button id="shortcut-toggle-form">+</button>
+    
+      <div id="shortcut-form" style="display: none;">
+        <input id="shortcut-title" placeholder="Title" />
+        <input id="shortcut-url" placeholder="URL" />
+        <button id="shortcut-save">Save</button>
       </div>
-    </div>
+    
+      <input id="shortcut-search" placeholder="Search..." />
+      <div id="shortcut-list"></div>
+    </div>    
 
     <div id="quote-container" class="draggable-component" title="Daily Quote">
       <blockquote class="typewriter" id="quote-text"></blockquote>
