@@ -24,27 +24,17 @@ document.addEventListener("DOMContentLoaded", () => {
     profileTabs.forEach(tab => {
         tab.addEventListener("click", () => {
             const selected = tab.dataset.profile;
-
-            let profileSwitchTimeout;
-            profileTabs.forEach(tab => {
-                tab.addEventListener("click", () => {
-                    const selected = tab.dataset.profile;
-
-                    clearTimeout(profileSwitchTimeout);
-                    profileSwitchTimeout = setTimeout(() => {
-                        chrome.storage.sync.set({ currentProfile: selected }, () => {
-                            currentProfile = selected;
-                            loadWidgetsForProfile(currentProfile);
-                            loadBackgroundForProfile(currentProfile);
-                            updateActiveTabUI(currentProfile);
-                            showToast("Switched to " + selected);
-                        });
-                    }, 20); // wait 20ms before actually switching profiles
-                });
+    
+            chrome.storage.sync.set({ currentProfile: selected }, () => {
+                currentProfile = selected;
+                loadWidgetsForProfile(currentProfile);
+                loadBackgroundForProfile(currentProfile);
+                updateActiveTabUI(currentProfile);
+                showToast("Switched to " + selected);
             });
-
         });
     });
+    
 
     chrome.storage.sync.get(["currentProfile"], (res) => {
         currentProfile = res.currentProfile || "storyteller";
@@ -173,8 +163,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.body.style.backgroundColor = bgColor;
                 const colorPicker = document.getElementById('bgColorPicker');
                 if (colorPicker) colorPicker.value = bgColor;
-            } else {
-                console.log(`No bgColor saved for '${profileName}'`);
             }
         });
     }
