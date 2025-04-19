@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedbackDialog = document.getElementById('feedback-dialog');
     const feedbackSendButton = document.getElementById('feedback-send-button');
     const feedbackInput = document.getElementById('feedback-input');
+    const nameInput = document.getElementById('feedback-name');
+    const contactInput = document.getElementById('feedback-contact');
 
     // Show the dialog when the icon is clicked
     feedbackIcon.addEventListener('click', () => {
@@ -20,11 +22,18 @@ document.addEventListener('DOMContentLoaded', () => {
     feedbackSendButton.addEventListener('click', async () => {
         const feedbackText = feedbackInput.value.trim();
         if (!feedbackText) return;
+
+        const payload = {
+            feedback: feedbackText,
+            name: nameInput.value.trim() || undefined,
+            contact: contactInput.value.trim() || undefined
+        };
+        
         try {
             // Use a POST request with JSON body
             fetch('https://ntbvju14ce.execute-api.us-east-1.amazonaws.com/dev/submitFeedback', {
                 method: 'POST',
-                body: JSON.stringify({ feedback: feedbackText })
+                body: JSON.stringify(payload)
             })
             .then(response => {
                 // Optionally, you can check if (!response.ok) throw ...
@@ -33,6 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 alert('Thanks for your feedback!');
                 feedbackInput.value = '';
+                nameInput.value = '';
+                contactInput.value = '';
                 feedbackDialog.classList.add('hidden');
             })
             .catch(error => {
