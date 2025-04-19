@@ -45,7 +45,7 @@
 #widget-settings {
     visibility: visible;
     padding: 0 12px;
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     width: 100%;
   }
   
@@ -57,7 +57,7 @@
 #widget-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     -ms-overflow-style: none; /* Hides scrollbar for Internet Explorer */
 }
 
